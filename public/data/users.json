@@ -1,0 +1,60 @@
+[
+    {
+        "id": "USR001",
+        "name": "Arjun Sharma",
+        "email": "arjun@example.com",
+        "password": "arjun123",
+        "phone": "9876543210",
+        "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop",
+        "joinDate": "2025-01-15",
+        "walletBalance": 2500,
+        "savedPassengers": [
+            {
+                "name": "Priya Sharma",
+                "age": 28,
+                "gender": "Female",
+                "relation": "Spouse"
+            }
+        ]
+    },
+    {
+        "id": "USR002",
+        "name": "Meera Patel",
+        "email": "meera@example.com",
+        "password": "meera123",
+        "phone": "9812345678",
+        "avatar": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop",
+        "joinDate": "2025-03-22",
+        "walletBalance": 4750,
+        "savedPassengers": []
+    },
+    {
+        "id": "USR003",
+        "name": "Rahul Verma",
+        "email": "rahul@example.com",
+        "password": "rahul123",
+        "phone": "9988776655",
+        "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop",
+        "joinDate": "2024-11-01",
+        "walletBalance": 1200,
+        "savedPassengers": [
+            {
+                "name": "Sunita Verma",
+                "age": 55,
+                "gender": "Female",
+                "relation": "Mother"
+            }
+        ]
+    },
+    {
+        "id": "USR004",
+        "name": "Alice Smith",
+        "email": "alice@routesync.com",
+        "password": "alice123",
+        "phone": "9998887776",
+        "avatar": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop",
+        "joinDate": "2026-02-22",
+        "walletBalance": 1000,
+        "savedPassengers": []
+    }
+]

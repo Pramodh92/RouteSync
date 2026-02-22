@@ -1,0 +1,154 @@
+[
+    {
+        "id": "BS001",
+        "operator": "Golden Travels",
+        "logo": "https://images.unsplash.com/photo-1570125909517-53cb21c89ff2?w=80&h=80&fit=crop",
+        "from": "Mumbai",
+        "to": "Pune",
+        "departure": "06:00",
+        "arrival": "09:30",
+        "duration": "3h 30m",
+        "price": 450,
+        "type": "AC Sleeper",
+        "rating": 4.3,
+        "totalSeats": 40,
+        "availableSeats": 18,
+        "amenities": [
+            "WiFi",
+            "Charging Point",
+            "Water Bottle",
+            "Blanket"
+        ],
+        "boardingPoints": [
+            "Dadar",
+            "Bandra",
+            "Vashi"
+        ],
+        "droppingPoints": [
+            "Shivajinagar",
+            "Kothrud",
+            "Hinjewadi"
+        ]
+    },
+    {
+        "id": "BS002",
+        "operator": "Sunrise Express",
+        "logo": "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=80&h=80&fit=crop",
+        "from": "Delhi",
+        "to": "Jaipur",
+        "departure": "07:30",
+        "arrival": "12:00",
+        "duration": "4h 30m",
+        "price": 650,
+        "type": "AC Semi-Sleeper",
+        "rating": 4.5,
+        "totalSeats": 36,
+        "availableSeats": 12,
+        "amenities": [
+            "WiFi",
+            "Charging Point",
+            "Snacks"
+        ],
+        "boardingPoints": [
+            "Kashmere Gate",
+            "Dhaula Kuan",
+            "Airport"
+        ],
+        "droppingPoints": [
+            "Sindhi Camp",
+            "Pink Square",
+            "Ajmer Road"
+        ]
+    },
+    {
+        "id": "BS003",
+        "operator": "RedBus Premium",
+        "logo": "https://images.unsplash.com/photo-1570125909517-53cb21c89ff2?w=80&h=80&fit=crop",
+        "from": "Bangalore",
+        "to": "Goa",
+        "departure": "21:00",
+        "arrival": "07:00+1",
+        "duration": "10h 00m",
+        "price": 1200,
+        "type": "Volvo AC",
+        "rating": 4.6,
+        "totalSeats": 40,
+        "availableSeats": 6,
+        "amenities": [
+            "WiFi",
+            "Charging Point",
+            "Water",
+            "Blanket",
+            "Entertainment"
+        ],
+        "boardingPoints": [
+            "Majestic",
+            "Silk Board",
+            "Electronic City"
+        ],
+        "droppingPoints": [
+            "Panaji",
+            "Margao",
+            "Vasco"
+        ]
+    },
+    {
+        "id": "BS004",
+        "operator": "VRL Travels",
+        "logo": "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=80&h=80&fit=crop",
+        "from": "Hyderabad",
+        "to": "Bangalore",
+        "departure": "21:30",
+        "arrival": "06:00+1",
+        "duration": "8h 30m",
+        "price": 950,
+        "type": "Multi-Axle Volvo",
+        "rating": 4.4,
+        "totalSeats": 45,
+        "availableSeats": 22,
+        "amenities": [
+            "WiFi",
+            "Charging Point",
+            "Blanket",
+            "Reading Light"
+        ],
+        "boardingPoints": [
+            "Ameerpet",
+            "HITEC City",
+            "LB Nagar"
+        ],
+        "droppingPoints": [
+            "Majestic",
+            "Shivajinagar",
+            "Hebbal"
+        ]
+    },
+    {
+        "id": "BS005",
+        "operator": "KSRTC Premium",
+        "logo": "https://images.unsplash.com/photo-1570125909517-53cb21c89ff2?w=80&h=80&fit=crop",
+        "from": "Bangalore",
+        "to": "Mysuru",
+        "departure": "08:00",
+        "arrival": "11:30",
+        "duration": "3h 30m",
+        "price": 350,
+        "type": "AC Seater",
+        "rating": 4.1,
+        "totalSeats": 45,
+        "availableSeats": 30,
+        "amenities": [
+            "Charging Point"
+        ],
+        "boardingPoints": [
+            "Majestic",
+            "Kengeri",
+            "Ramanagaram"
+        ],
+        "droppingPoints": [
+            "Mysuru City",
+            "Vijayanagar",
+            "Hebbal Mysuru"
+        ]
+    }
+]

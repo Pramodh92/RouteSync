@@ -1,0 +1,71 @@
+[
+    {
+        "id": "CB001",
+        "type": "Sedan",
+        "name": "Comfort Sedan",
+        "brand": "Swift Dzire / Similar",
+        "image": "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=600&h=400&fit=crop",
+        "capacity": 4,
+        "luggage": 2,
+        "pricePerKm": 12,
+        "basePrice": 299,
+        "amenities": [
+            "AC",
+            "Music System"
+        ],
+        "rating": 4.2
+    },
+    {
+        "id": "CB002",
+        "type": "SUV",
+        "name": "Premium SUV",
+        "brand": "Innova Crysta / Similar",
+        "image": "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=600&h=400&fit=crop",
+        "capacity": 6,
+        "luggage": 4,
+        "pricePerKm": 18,
+        "basePrice": 499,
+        "amenities": [
+            "AC",
+            "Music System",
+            "Extra Legroom"
+        ],
+        "rating": 4.5
+    },
+    {
+        "id": "CB003",
+        "type": "Luxury",
+        "name": "Luxury Sedan",
+        "brand": "Mercedes E-Class / Similar",
+        "image": "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=600&h=400&fit=crop",
+        "capacity": 4,
+        "luggage": 3,
+        "pricePerKm": 28,
+        "basePrice": 899,
+        "amenities": [
+            "AC",
+            "Premium Audio",
+            "WiFi",
+            "Bottled Water",
+            "Newspaper"
+        ],
+        "rating": 4.8
+    },
+    {
+        "id": "CB004",
+        "type": "Tempo",
+        "name": "Tempo Traveller",
+        "brand": "Force Tempo / Similar",
+        "image": "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&h=400&fit=crop",
+        "capacity": 12,
+        "luggage": 8,
+        "pricePerKm": 22,
+        "basePrice": 799,
+        "amenities": [
+            "AC",
+            "Music System",
+            "Reclining Seats"
+        ],
+        "rating": 4.0
+    }
+]

@@ -1,0 +1,104 @@
+﻿[36mvite v7.3.1 [32mbuilding client environment for production...[36m[39m
+transforming...
+[32mΓ£ô[39m 59 modules transformed.
+node.exe : 
+[31mΓ£ù[39m Build 
+failed in 585ms
+At line:1 char:1
++ & "C:\Program Files
+\nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo 
+...
++ ~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~
+    + CategoryInfo   
+           : NotSpe  
+  cified: ([31mΓ£   
+ ù[39m Build fai    
+led in 585ms:Str    
+ing) [], RemoteE    
+xception
+    + FullyQualified 
+   ErrorId : Native  
+  CommandError
+ 
+[31merror during 
+build:
+[31m[vite]: Rollup 
+failed to resolve 
+import 
+"canvas-confetti" 
+from 
+"C:/Projects/React We
+bsite/src/pages/fligh
+ts/FlightConfirmation
+.jsx".
+This is most likely 
+unintended because 
+it can break your 
+application at 
+runtime.
+If you do want to 
+externalize this 
+module explicitly 
+add it to
+`build.rollupOptions.
+external`[31m
+    at viteLog (file:
+///C:/Projects/React%
+20Website/node_module
+s/vite/dist/node/chun
+ks/config.js:33635:57
+)
+    at file:///C:/Pro
+jects/React%20Website
+/node_modules/vite/di
+st/node/chunks/config
+.js:33669:73
+    at onwarn (file:/
+//C:/Projects/React%2
+0Website/node_modules
+/@vitejs/plugin-react
+/dist/index.js:76:7)
+    at file:///C:/Pro
+jects/React%20Website
+/node_modules/vite/di
+st/node/chunks/config
+.js:33669:28
+    at onRollupLog (f
+ile:///C:/Projects/Re
+act%20Website/node_mo
+dules/vite/dist/node/
+chunks/config.js:3366
+4:63)
+    at onLog (file://
+/C:/Projects/React%20
+Website/node_modules/
+vite/dist/node/chunks
+/config.js:33467:4)
+    at file:///C:/Pro
+jects/React%20Website
+/node_modules/rollup/
+dist/es/shared/node-e
+ntry.js:20958:32
+    at Object.logger 
+[as onLog] (file:///C
+:/Projects/React%20We
+bsite/node_modules/ro
+llup/dist/es/shared/n
+ode-entry.js:22945:9)
+    at ModuleLoader.h
+andleInvalidResolvedI
+d (file:///C:/Project
+s/React%20Website/nod
+e_modules/rollup/dist
+/es/shared/node-entry
+.js:21689:26)
+    at file:///C:/Pro
+jects/React%20Website
+/node_modules/rollup/
+dist/es/shared/node-e
+ntry.js:21647:26[39m

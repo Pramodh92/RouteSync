@@ -1,0 +1,363 @@
+[
+    {
+        "id": "PKG001",
+        "name": "Golden Rajasthan Odyssey",
+        "destination": "Rajasthan",
+        "image": "/images/rajasthan.png",
+        "gallery": [
+            "https://images.unsplash.com/photo-1565019001609-2c2070c0f538?w=800&h=500&fit=crop",
+            "https://images.unsplash.com/photo-1500049242364-5f500807cdd7?w=800&h=500&fit=crop",
+            "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=800&h=500&fit=crop"
+        ],
+        "duration": "7 Days / 6 Nights",
+        "cities": [
+            "Jaipur",
+            "Jodhpur",
+            "Udaipur",
+            "Jaisalmer"
+        ],
+        "price": 28999,
+        "originalPrice": 38000,
+        "rating": 4.7,
+        "reviews": 1243,
+        "category": "Heritage",
+        "groupSize": "2-12",
+        "inclusions": [
+            "Hotels",
+            "Breakfast",
+            "Dinner",
+            "All Transfers",
+            "Guide",
+            "Entry Tickets"
+        ],
+        "exclusions": [
+            "Flights",
+            "Lunch",
+            "Personal Expenses",
+            "Insurance"
+        ],
+        "highlights": [
+            "Amber Fort",
+            "Mehrangarh Fort",
+            "Lake Pichola Sunset",
+            "Sam Sand Dunes Camel Ride",
+            "City Palace"
+        ],
+        "itinerary": [
+            {
+                "day": 1,
+                "title": "Arrival in Jaipur",
+                "description": "Welcome to the Pink City! Check-in and evening at leisure. Welcome dinner at heritage restaurant."
+            },
+            {
+                "day": 2,
+                "title": "Jaipur Sightseeing",
+                "description": "Explore Amber Fort, Hawa Mahal, Jantar Mantar. Camel ride at sunset. Cultural performance in the evening."
+            },
+            {
+                "day": 3,
+                "title": "Jaipur to Jodhpur",
+                "description": "Drive to the Blue City. Visit Mehrangarh Fort and Jaswant Thada. Explore the colorful Sardar Market."
+            },
+            {
+                "day": 4,
+                "title": "Jodhpur to Udaipur",
+                "description": "Scenic drive through Rajasthan's heartland. Arrive in the City of Lakes. Evening boat ride on Lake Pichola."
+            },
+            {
+                "day": 5,
+                "title": "Udaipur Sightseeing",
+                "description": "Visit City Palace, Saheliyon-ki-Bari, and Bagore-ki-Haveli. Enjoy a traditional Rajasthani dance show."
+            },
+            {
+                "day": 6,
+                "title": "Udaipur to Jaisalmer",
+                "description": "Drive to the Golden City. Check-in at desert camp. Camel safari at Sam Sand Dunes. Desert night under stars."
+            },
+            {
+                "day": 7,
+                "title": "Departure",
+                "description": "Explore Jaisalmer Fort and Patwon-ki-Haveli. Transfer to Jaisalmer station/airport."
+            }
+        ]
+    },
+    {
+        "id": "PKG002",
+        "name": "Kerala Backwaters Bliss",
+        "destination": "Kerala",
+        "image": "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=800&h=500&fit=crop",
+        "gallery": [
+            "https://images.unsplash.com/photo-1615880484746-a134be9a6ecf?w=800&h=500&fit=crop",
+            "https://images.unsplash.com/photo-1519046904884-53103b34b206?w=800&h=500&fit=crop",
+            "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=500&fit=crop"
+        ],
+        "duration": "5 Days / 4 Nights",
+        "cities": [
+            "Kochi",
+            "Munnar",
+            "Alleppey"
+        ],
+        "price": 19999,
+        "originalPrice": 26000,
+        "rating": 4.8,
+        "reviews": 987,
+        "category": "Nature",
+        "groupSize": "2-8",
+        "inclusions": [
+            "Hotels",
+            "Houseboat",
+            "All Meals on Houseboat",
+            "Transfers",
+            "Sightseeing"
+        ],
+        "exclusions": [
+            "Flights",
+            "Meals at Hotels",
+            "Personal Expenses"
+        ],
+        "highlights": [
+            "Houseboat Cruise",
+            "Tea Gardens",
+            "Athirappilly Falls",
+            "Mattancherry Palace",
+            "Elephant Encounter"
+        ],
+        "itinerary": [
+            {
+                "day": 1,
+                "title": "Arrive Kochi",
+                "description": "Explore Fort Kochi, Chinese Fishing Nets, and Mattancherry. Kathakali performance in the evening."
+            },
+            {
+                "day": 2,
+                "title": "Kochi to Munnar",
+                "description": "Drive through scenic ghats to the hill station. Visit Eravikulam National Park and tea gardens."
+            },
+            {
+                "day": 3,
+                "title": "Munnar to Alleppey",
+                "description": "Drive down to Alleppey. Board your luxury houseboat on the backwaters. All meals included on board."
+            },
+            {
+                "day": 4,
+                "title": "Backwater Cruise",
+                "description": "Full day cruising through Kerala's enchanting backwater channels. Bird watching, local village visits."
+            },
+            {
+                "day": 5,
+                "title": "Departure",
+                "description": "Morning yoga and breakfast on the houseboat. Transfer to Kochi airport/railway station."
+            }
+        ]
+    },
+    {
+        "id": "PKG003",
+        "name": "Himalayan Splendour",
+        "destination": "Himachal Pradesh",
+        "image": "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=800&h=500&fit=crop",
+        "gallery": [
+            "https://images.unsplash.com/photo-1586771107445-d3ca888129ff?w=800&h=500&fit=crop",
+            "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=800&h=500&fit=crop",
+            "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&h=500&fit=crop"
+        ],
+        "duration": "6 Days / 5 Nights",
+        "cities": [
+            "Shimla",
+            "Manali",
+            "Rohtang Pass"
+        ],
+        "price": 24999,
+        "originalPrice": 32000,
+        "rating": 4.6,
+        "reviews": 2104,
+        "category": "Adventure",
+        "groupSize": "2-15",
+        "inclusions": [
+            "Hotels",
+            "Breakfast",
+            "Dinner",
+            "All Transfers",
+            "Adventure Activities"
+        ],
+        "exclusions": [
+            "Flights",
+            "Lunch",
+            "Snow Activities Equipment"
+        ],
+        "highlights": [
+            "Rohtang Pass Snow",
+            "Solang Valley Adventure",
+            "Ridge Shimla",
+            "Hadimba Temple",
+            "Paragliding"
+        ],
+        "itinerary": [
+            {
+                "day": 1,
+                "title": "Arrive Shimla",
+                "description": "Welcome to the Summer Capital. Explore The Ridge and Mall Road. Visit Christ Church."
+            },
+            {
+                "day": 2,
+                "title": "Shimla Local + Kufri",
+                "description": "Day trip to Kufri for snow activities. Visit Jakhu Temple. Beautiful Himalayan views."
+            },
+            {
+                "day": 3,
+                "title": "Shimla to Manali",
+                "description": "Scenic drive through Kullu Valley. Stop at Kullu Shawl factories. Arrive Manali by evening."
+            },
+            {
+                "day": 4,
+                "title": "Manali Sightseeing",
+                "description": "Visit Hadimba Devi Temple, Old Manali, Vashisht Baths, and Tibetan Monastery."
+            },
+            {
+                "day": 5,
+                "title": "Rohtang Pass / Solang Valley",
+                "description": "Excursion to Rohtang Pass (subject to permit). Snow activities, skiing, paragliding at Solang Valley."
+            },
+            {
+                "day": 6,
+                "title": "Departure",
+                "description": "Leisure morning. Transfer to Bhuntar Airport or Manali bus stand."
+            }
+        ]
+    },
+    {
+        "id": "PKG004",
+        "name": "Goa Beach Fiesta",
+        "destination": "Goa",
+        "image": "https://images.unsplash.com/photo-1587922546307-776227941871?w=800&h=500&fit=crop",
+        "gallery": [
+            "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&h=500&fit=crop",
+            "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&h=500&fit=crop",
+            "https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=800&h=500&fit=crop"
+        ],
+        "duration": "4 Days / 3 Nights",
+        "cities": [
+            "North Goa",
+            "South Goa"
+        ],
+        "price": 14999,
+        "originalPrice": 19000,
+        "rating": 4.4,
+        "reviews": 3210,
+        "category": "Beach",
+        "groupSize": "2-10",
+        "inclusions": [
+            "Resort Stay",
+            "Breakfast",
+            "Airport Transfers",
+            "North & South Goa Tour"
+        ],
+        "exclusions": [
+            "Flights",
+            "Lunches & Dinners",
+            "Water Sports",
+            "Personal Expenses"
+        ],
+        "highlights": [
+            "Calangute Beach",
+            "Baga Nightlife",
+            "Dudhsagar Falls",
+            "Old Goa Churches",
+            "Cruise"
+        ],
+        "itinerary": [
+            {
+                "day": 1,
+                "title": "Arrive Goa",
+                "description": "Airport pickup. Check-in to beach resort. Relax at Calangute or Baga Beach. Sunset cruise."
+            },
+            {
+                "day": 2,
+                "title": "North Goa Sightseeing",
+                "description": "Fort Aguada, Chapora Fort, Anjuna Flea Market. Water sports at Calangute."
+            },
+            {
+                "day": 3,
+                "title": "South Goa & Dudhsagar",
+                "description": "Visit Dudhsagar Falls, Spice Plantation, Old Goa churches, and Miramar Beach."
+            },
+            {
+                "day": 4,
+                "title": "Departure",
+                "description": "Leisurely morning walk on the beach. Airport/station transfer."
+            }
+        ]
+    },
+    {
+        "id": "PKG005",
+        "name": "Andaman Island Paradise",
+        "destination": "Andaman & Nicobar",
+        "image": "https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=800&h=500&fit=crop",
+        "gallery": [
+            "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&h=500&fit=crop",
+            "https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=800&h=500&fit=crop",
+            "https://images.unsplash.com/photo-1619454016518-697bc231e7cb?w=800&h=500&fit=crop"
+        ],
+        "duration": "6 Days / 5 Nights",
+        "cities": [
+            "Port Blair",
+            "Havelock Island",
+            "Neil Island"
+        ],
+        "price": 32999,
+        "originalPrice": 44000,
+        "rating": 4.9,
+        "reviews": 876,
+        "category": "Beach",
+        "groupSize": "2-8",
+        "inclusions": [
+            "Hotels",
+            "All Meals",
+            "Ferries",
+            "Scuba Diving",
+            "Sightseeing"
+        ],
+        "exclusions": [
+            "Flights to Port Blair",
+            "Personal Expenses"
+        ],
+        "highlights": [
+            "Radhanagar Beach",
+            "Scuba Diving",
+            "Glass-bottom Boat",
+            "Cellular Jail",
+            "Snorkeling"
+        ],
+        "itinerary": [
+            {
+                "day": 1,
+                "title": "Port Blair Arrival",
+                "description": "Arrive Port Blair. Visit Cellular Jail. Evening Sound & Light Show."
+            },
+            {
+                "day": 2,
+                "title": "Port Blair to Havelock",
+                "description": "Ferry to Havelock Island. Visit Radhanagar Beach (Asia's top beach). Sunset walk."
+            },
+            {
+                "day": 3,
+                "title": "Havelock Adventures",
+                "description": "Scuba diving at Elephant Beach. Glass-bottom boat ride over coral reefs. Free evening."
+            },
+            {
+                "day": 4,
+                "title": "Havelock to Neil Island",
+                "description": "Ferry to Neil Island. Natural Bridge, Bharatpur Beach snorkeling. Relaxed island life."
+            },
+            {
+                "day": 5,
+                "title": "Neil to Port Blair",
+                "description": "Return to Port Blair. Shopping at Aberdeen Bazaar. Farewell seafood dinner."
+            },
+            {
+                "day": 6,
+                "title": "Departure",
+                "description": "Airport transfer. Depart from Port Blair."
+            }
+        ]
+    }
+]

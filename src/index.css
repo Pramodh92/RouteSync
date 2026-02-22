@@ -1,0 +1,198 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  :root {
+    --color-charcoal: #1A1A1A;
+    --color-sand: #E6D3A3;
+    --color-orange: #FF7A00;
+    --color-ivory: #F7F4EF;
+    --color-olive: #6B705C;
+    --color-gold: #C9A227;
+    --color-cream: #FDF8F0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-ivory text-charcoal font-sans;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #F7F4EF;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #C9A227;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #FF7A00;
+  }
+}
+
+@layer components {
+  /* Button styles */
+  .btn-primary {
+    @apply bg-orange text-white font-semibold px-6 py-3 rounded-xl
+           hover:bg-orange-dark active:scale-95 transition-all duration-200
+           shadow-orange;
+  }
+
+  .btn-secondary {
+    @apply bg-transparent border-2 border-orange text-orange font-semibold px-6 py-3 rounded-xl
+           hover:bg-orange hover:text-white active:scale-95 transition-all duration-200;
+  }
+
+  .btn-gold {
+    @apply bg-gold text-charcoal font-semibold px-6 py-3 rounded-xl
+           hover:bg-gold-dark active:scale-95 transition-all duration-200
+           shadow-gold;
+  }
+
+  /* Card styles */
+  .card {
+    @apply bg-white rounded-2xl shadow-card hover:shadow-card-hover transition-all duration-300;
+  }
+
+  .card-glass {
+    @apply backdrop-blur-md bg-white/20 border border-white/30 rounded-2xl shadow-glass;
+  }
+
+  /* Input styles */
+  .input-field {
+    @apply w-full px-4 py-3 rounded-xl border border-sand bg-white text-charcoal
+           focus:outline-none focus:ring-2 focus:ring-orange/40 focus:border-orange
+           transition-all duration-200 placeholder-warmgray;
+  }
+
+  /* Section styles */
+  .section-padding {
+    @apply px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20;
+  }
+
+  .container-max {
+    @apply max-w-7xl mx-auto;
+  }
+
+  /* Gradient text */
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-orange to-gold;
+  }
+
+  /* Tag / Badge */
+  .tag {
+    @apply inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium;
+  }
+
+  .tag-orange {
+    @apply tag bg-orange/10 text-orange;
+  }
+
+  .tag-gold {
+    @apply tag bg-gold/10 text-gold-dark;
+  }
+
+  .tag-olive {
+    @apply tag bg-olive/10 text-olive-dark;
+  }
+
+  /* Price display */
+  .price-display {
+    @apply text-2xl font-bold text-charcoal;
+  }
+
+  .price-original {
+    @apply text-sm text-warmgray line-through;
+  }
+
+  /* Divider */
+  .divider {
+    @apply border-t border-sand/60 my-6;
+  }
+
+  /* Search highlight */
+  .search-active {
+    @apply border-orange bg-orange/5 text-orange;
+  }
+
+  /* Seat styles for bus */
+  .seat-available {
+    @apply w-9 h-9 rounded-lg bg-ivory border-2 border-sand cursor-pointer
+           hover:border-orange hover:bg-orange/10 transition-all duration-200;
+  }
+
+  .seat-selected {
+    @apply w-9 h-9 rounded-lg bg-orange border-2 border-orange-dark text-white cursor-pointer;
+  }
+
+  .seat-booked {
+    @apply w-9 h-9 rounded-lg bg-sand/60 border-2 border-sand cursor-not-allowed opacity-60;
+  }
+}
+
+@layer utilities {
+  .text-shadow {
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .text-shadow-lg {
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  }
+
+  .hero-overlay {
+    background: linear-gradient(to bottom, rgba(26,26,26,0.55) 0%, rgba(26,26,26,0.2) 40%, rgba(26,26,26,0.75) 100%);
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out both;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.4s ease-out both;
+  }
+
+  .animate-slide-in-right {
+    animation: slideInRight 0.4s ease-out both;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(24px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  @keyframes slideInRight {
+    from { transform: translateX(24px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+}

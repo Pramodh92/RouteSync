@@ -1,0 +1,397 @@
+[
+    {
+        "id": "HT001",
+        "name": "The Grand Marigold Palace",
+        "city": "Jaipur",
+        "state": "Rajasthan",
+        "rating": 5,
+        "reviews": 2847,
+        "pricePerNight": 8500,
+        "originalPrice": 12000,
+        "category": "Luxury",
+        "image": "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=500&fit=crop",
+        "gallery": [
+            "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&h=500&fit=crop",
+            "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800&h=500&fit=crop",
+            "https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=800&h=500&fit=crop"
+        ],
+        "amenities": [
+            "Pool",
+            "Spa",
+            "Restaurant",
+            "WiFi",
+            "Gym",
+            "Bar",
+            "Room Service",
+            "Parking"
+        ],
+        "description": "Experience royal Rajasthani hospitality in the heart of the Pink City, with stunning architecture, world-class cuisine, and impeccable service.",
+        "address": "MI Road, Civil Lines, Jaipur 302001",
+        "checkIn": "14:00",
+        "checkOut": "12:00",
+        "rooms": [
+            {
+                "type": "Deluxe Room",
+                "price": 8500,
+                "size": "400 sqft",
+                "beds": "1 King",
+                "available": true
+            },
+            {
+                "type": "Suite",
+                "price": 15000,
+                "size": "700 sqft",
+                "beds": "1 King + Sofa",
+                "available": true
+            },
+            {
+                "type": "Royal Suite",
+                "price": 28000,
+                "size": "1200 sqft",
+                "beds": "2 King",
+                "available": false
+            }
+        ]
+    },
+    {
+        "id": "HT002",
+        "name": "Serenity Beach Resort",
+        "city": "Goa",
+        "state": "Goa",
+        "rating": 4.5,
+        "reviews": 3621,
+        "pricePerNight": 6200,
+        "originalPrice": 8500,
+        "category": "Resort",
+        "image": "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800&h=500&fit=crop",
+        "gallery": [
+            "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&h=500&fit=crop",
+            "https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=800&h=500&fit=crop",
+            "https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=800&h=500&fit=crop"
+        ],
+        "amenities": [
+            "Beach Access",
+            "Pool",
+            "Spa",
+            "Restaurant",
+            "WiFi",
+            "Water Sports",
+            "Bar"
+        ],
+        "description": "Nestled along the golden shores of Calangute Beach, this resort offers an unrivalled blend of Goan charm and modern luxury.",
+        "address": "Calangute Beach Road, North Goa 403516",
+        "checkIn": "14:00",
+        "checkOut": "11:00",
+        "rooms": [
+            {
+                "type": "Garden View Room",
+                "price": 6200,
+                "size": "350 sqft",
+                "beds": "1 Queen",
+                "available": true
+            },
+            {
+                "type": "Sea View Room",
+                "price": 9500,
+                "size": "400 sqft",
+                "beds": "1 King",
+                "available": true
+            },
+            {
+                "type": "Beach Villa",
+                "price": 18000,
+                "size": "800 sqft",
+                "beds": "2 King",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "HT003",
+        "name": "The Oberoi Highlands",
+        "city": "Shimla",
+        "state": "Himachal Pradesh",
+        "rating": 5,
+        "reviews": 1893,
+        "pricePerNight": 11500,
+        "originalPrice": 15000,
+        "category": "Luxury",
+        "image": "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=800&h=500&fit=crop",
+        "gallery": [
+            "https://images.unsplash.com/photo-1610595600977-47fde18cb8d3?w=800&h=500&fit=crop",
+            "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800&h=500&fit=crop",
+            "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=500&fit=crop"
+        ],
+        "amenities": [
+            "Mountain View",
+            "Spa",
+            "Restaurant",
+            "WiFi",
+            "Fireplace",
+            "Bar",
+            "Room Service"
+        ],
+        "description": "Perched atop the Himalayan foothills, this colonial-era masterpiece offers breathtaking mountain panoramas and unmatched luxury.",
+        "address": "The Ridge, Shimla, Himachal Pradesh 171001",
+        "checkIn": "14:00",
+        "checkOut": "12:00",
+        "rooms": [
+            {
+                "type": "Hill View Room",
+                "price": 11500,
+                "size": "450 sqft",
+                "beds": "1 King",
+                "available": true
+            },
+            {
+                "type": "Heritage Suite",
+                "price": 20000,
+                "size": "800 sqft",
+                "beds": "1 King + Sitting",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "HT004",
+        "name": "Mumbai Central Boutique",
+        "city": "Mumbai",
+        "state": "Maharashtra",
+        "rating": 4,
+        "reviews": 4210,
+        "pricePerNight": 4500,
+        "originalPrice": 6000,
+        "category": "Business",
+        "image": "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800&h=500&fit=crop",
+        "gallery": [
+            "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800&h=500&fit=crop",
+            "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800&h=500&fit=crop",
+            "https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=800&h=500&fit=crop"
+        ],
+        "amenities": [
+            "WiFi",
+            "Restaurant",
+            "Gym",
+            "Business Center",
+            "Parking",
+            "Room Service"
+        ],
+        "description": "A sleek urban retreat in the heart of Mumbai, perfect for business and leisure travelers who demand premium comfort and connectivity.",
+        "address": "Nariman Point, Mumbai 400021",
+        "checkIn": "12:00",
+        "checkOut": "11:00",
+        "rooms": [
+            {
+                "type": "Standard Room",
+                "price": 4500,
+                "size": "300 sqft",
+                "beds": "1 Queen",
+                "available": true
+            },
+            {
+                "type": "Deluxe Room",
+                "price": 6500,
+                "size": "400 sqft",
+                "beds": "1 King",
+                "available": true
+            },
+            {
+                "type": "Executive Suite",
+                "price": 12000,
+                "size": "650 sqft",
+                "beds": "1 King + Living",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "HT005",
+        "name": "Backwater Bliss Kerala",
+        "city": "Alleppey",
+        "state": "Kerala",
+        "rating": 4.8,
+        "reviews": 2150,
+        "pricePerNight": 7800,
+        "originalPrice": 10500,
+        "category": "Resort",
+        "image": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=500&fit=crop",
+        "gallery": [
+            "https://images.unsplash.com/photo-1615880484746-a134be9a6ecf?w=800&h=500&fit=crop",
+            "https://images.unsplash.com/photo-1586611292717-f828b167408c?w=800&h=500&fit=crop",
+            "https://images.unsplash.com/photo-1519046904884-53103b34b206?w=800&h=500&fit=crop"
+        ],
+        "amenities": [
+            "Backwater View",
+            "Houseboat",
+            "Spa",
+            "Yoga",
+            "Restaurant",
+            "WiFi",
+            "Cycling"
+        ],
+        "description": "An enchanting stay amidst Kerala's shimmering backwaters. Wake up to birdsong, cruise the canals, and surrender to Ayurvedic bliss.",
+        "address": "Punnamada Lake, Alleppey, Kerala 688001",
+        "checkIn": "14:00",
+        "checkOut": "11:00",
+        "rooms": [
+            {
+                "type": "Backwater Cottage",
+                "price": 7800,
+                "size": "500 sqft",
+                "beds": "1 King",
+                "available": true
+            },
+            {
+                "type": "Floating Suite",
+                "price": 14000,
+                "size": "600 sqft",
+                "beds": "1 King",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "HT006",
+        "name": "Taj Mahal Delhi",
+        "city": "Delhi",
+        "state": "Delhi",
+        "rating": 5,
+        "reviews": 5430,
+        "pricePerNight": 13000,
+        "originalPrice": 18000,
+        "category": "Luxury",
+        "image": "https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=800&h=500&fit=crop",
+        "gallery": [
+            "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=800&h=500&fit=crop",
+            "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&h=500&fit=crop",
+            "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=500&fit=crop"
+        ],
+        "amenities": [
+            "Pool",
+            "Spa",
+            "3 Restaurants",
+            "WiFi",
+            "Gym",
+            "Butler Service",
+            "Lounge",
+            "Concierge"
+        ],
+        "description": "An icon of Delhi's luxury hospitality. Breathtaking interiors, legendary service, and world-class dining await at this storied property.",
+        "address": "1 Man Singh Road, New Delhi 110011",
+        "checkIn": "14:00",
+        "checkOut": "12:00",
+        "rooms": [
+            {
+                "type": "Deluxe Room",
+                "price": 13000,
+                "size": "500 sqft",
+                "beds": "1 King",
+                "available": true
+            },
+            {
+                "type": "Club Suite",
+                "price": 22000,
+                "size": "900 sqft",
+                "beds": "1 King + Study",
+                "available": true
+            },
+            {
+                "type": "Presidential Suite",
+                "price": 55000,
+                "size": "2500 sqft",
+                "beds": "3 King",
+                "available": false
+            }
+        ]
+    },
+    {
+        "id": "HT007",
+        "name": "Ooty Misty Retreat",
+        "city": "Ooty",
+        "state": "Tamil Nadu",
+        "rating": 4.3,
+        "reviews": 987,
+        "pricePerNight": 3800,
+        "originalPrice": 5200,
+        "category": "Heritage",
+        "image": "https://images.unsplash.com/photo-1610595600977-47fde18cb8d3?w=800&h=500&fit=crop",
+        "gallery": [
+            "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=800&h=500&fit=crop",
+            "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800&h=500&fit=crop",
+            "https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=800&h=500&fit=crop"
+        ],
+        "amenities": [
+            "Garden",
+            "Restaurant",
+            "Fireplace",
+            "WiFi",
+            "Tea Estate Tours"
+        ],
+        "description": "A charming colonial bungalow surrounded by misty hills and fragrant tea estates. Perfect for a tranquil Nilgiri escape.",
+        "address": "Charing Cross, Ooty, Tamil Nadu 643001",
+        "checkIn": "13:00",
+        "checkOut": "11:00",
+        "rooms": [
+            {
+                "type": "Cottage Room",
+                "price": 3800,
+                "size": "350 sqft",
+                "beds": "1 Queen",
+                "available": true
+            },
+            {
+                "type": "Garden Suite",
+                "price": 6500,
+                "size": "550 sqft",
+                "beds": "1 King + Verandah",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "HT008",
+        "name": "Udaipur Lake Palace View",
+        "city": "Udaipur",
+        "state": "Rajasthan",
+        "rating": 4.9,
+        "reviews": 3289,
+        "pricePerNight": 9500,
+        "originalPrice": 13000,
+        "category": "Heritage",
+        "image": "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=800&h=500&fit=crop",
+        "gallery": [
+            "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=500&fit=crop",
+            "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800&h=500&fit=crop",
+            "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=500&fit=crop"
+        ],
+        "amenities": [
+            "Lake View",
+            "Pool",
+            "Spa",
+            "Fine Dining",
+            "WiFi",
+            "Boat Rides",
+            "Cultural Shows"
+        ],
+        "description": "Overlooking the magical Lake Pichola, this heritage property embodies Rajput grandeur. Every room tells a story of romance and royalty.",
+        "address": "Pichola Lake, Udaipur, Rajasthan 313001",
+        "checkIn": "14:00",
+        "checkOut": "12:00",
+        "rooms": [
+            {
+                "type": "Lake View Room",
+                "price": 9500,
+                "size": "450 sqft",
+                "beds": "1 King",
+                "available": true
+            },
+            {
+                "type": "Royal Suite",
+                "price": 18000,
+                "size": "900 sqft",
+                "beds": "1 King + Terrace",
+                "available": true
+            }
+        ]
+    }
+]
