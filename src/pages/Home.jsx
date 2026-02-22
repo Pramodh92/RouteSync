@@ -25,7 +25,7 @@ const TABS = [
 
 const TRENDING = [
     { name: 'Goa', label: 'Beach & Sun', img: 'https://images.unsplash.com/photo-1587922546307-776227941871?w=400&h=300&fit=crop', price: '₹2,999' },
-    { name: 'Rajasthan', label: 'Heritage', img: 'https://images.unsplash.com/photo-1603431777007-4e1de0df32ef?w=400&h=300&fit=crop', price: '₹3,499' },
+    { name: 'Rajasthan', label: 'Heritage', img: 'https://s7ap1.scene7.com/is/image/incredibleindia/2-mehrangarh-fort-jodhpur-rajasthan-city-hero?qlt=82&ts=1726660925514', price: '₹3,499' },
     { name: 'Kerala', label: 'Backwaters', img: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=400&h=300&fit=crop', price: '₹4,199' },
     { name: 'Shimla', label: 'Mountains', img: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=400&h=300&fit=crop', price: '₹3,799' },
     { name: 'Andaman', label: 'Islands', img: 'https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=400&h=300&fit=crop', price: '₹6,499' },
@@ -187,8 +187,8 @@ export default function Home() {
                                         key={id}
                                         onClick={() => setActiveTab(id)}
                                         className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${activeTab === id
-                                                ? 'bg-orange text-white shadow-orange'
-                                                : 'text-olive hover:bg-sand/40'
+                                            ? 'bg-orange text-white shadow-orange'
+                                            : 'text-olive hover:bg-sand/40'
                                             }`}
                                     >
                                         <Icon className="w-4 h-4" />
