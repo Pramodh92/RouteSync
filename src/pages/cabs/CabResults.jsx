@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Car, Users, Wifi, Wind, Check } from 'lucide-react';
 import { useBooking } from '../../context/BookingContext';
 import Loader from '../../components/ui/Loader';
+import { api } from '../../services/api.js';
 
 export default function CabResults() {
     const { searchData, startBooking } = useBooking();
@@ -12,7 +13,7 @@ export default function CabResults() {
     const [distance, setDistance] = useState(250);
 
     useEffect(() => {
-        fetch('/data/cabs.json').then(r => r.json()).then(d => { setCabs(d); setLoading(false); });
+        api.cabs.list().then(res => { setCabs(res.data); setLoading(false); });
     }, []);
 
     const getPriceForCab = (cab) => Math.round(cab.basePrice + (distance * cab.pricePerKm));

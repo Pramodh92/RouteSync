@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState } from 'react';
+import { api, setToken, clearToken, getToken } from '../services/api.js';
 
 const AuthContext = createContext(null);
 
@@ -16,67 +17,46 @@ export function AuthProvider({ children }) {
 
     const login = async (email, password) => {
         try {
-            // 1. Check static data
-            const res = await fetch('/data/users.json');
-            const staticUsers = await res.json();
-
-            // 2. Check local registered users
-            const localUsers = JSON.parse(localStorage.getItem('routesync_local_users') || '[]');
-
-            const allUsers = [...staticUsers, ...localUsers];
-            const found = allUsers.find(u => u.email === email && u.password === password);
-
-            if (found) {
-                const { password: _, ...safe } = found;
-                setUser(safe);
-                localStorage.setItem('routesync_user', JSON.stringify(safe));
-                return { success: true };
-            }
-            return { success: false, message: 'Invalid email or password. Demo: alice@routesync.com / alice123' };
+            const data = await api.auth.login(email, password);
+            setToken(data.token);
+            setUser(data.user);
+            localStorage.setItem('routesync_user', JSON.stringify(data.user));
+            return { success: true };
         } catch (e) {
-            return { success: false, message: 'Auth error. Please try again.' };
+            return { success: false, message: e.message || 'Invalid email or password' };
         }
     };
 
     const signup = async (name, email, password, phone) => {
         try {
-            const newUser = {
-                id: `u${Date.now()}`,
-                name,
-                email,
-                password, // Store for login simulation
-                phone: phone || '',
-                avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=FF7A00&color=fff`,
-                joinDate: new Date().toISOString().split('T')[0],
-                walletBalance: 500,
-                savedPassengers: [],
-            };
-
-            // Save to local registry
-            const localUsers = JSON.parse(localStorage.getItem('routesync_local_users') || '[]');
-            localUsers.push(newUser);
-            localStorage.setItem('routesync_local_users', JSON.stringify(localUsers));
-
-            // Set current session
-            const { password: _, ...safe } = newUser;
-            setUser(safe);
-            localStorage.setItem('routesync_user', JSON.stringify(safe));
+            const data = await api.auth.register(name, email, password, phone);
+            setToken(data.token);
+            setUser(data.user);
+            localStorage.setItem('routesync_user', JSON.stringify(data.user));
             return { success: true };
         } catch (e) {
-            return { success: false, message: 'Registration failed.' };
+            return { success: false, message: e.message || 'Registration failed.' };
         }
     };
 
     const logout = () => {
         setUser(null);
+        clearToken();
         localStorage.removeItem('routesync_user');
     };
 
-    const updateProfile = (updatedFields) => {
-        if (!user) return;
-        const updated = { ...user, ...updatedFields };
-        setUser(updated);
-        localStorage.setItem('routesync_user', JSON.stringify(updated));
+    const updateProfile = async (updatedFields) => {
+        try {
+            const data = await api.users.updateProfile(updatedFields);
+            setUser(data.data);
+            localStorage.setItem('routesync_user', JSON.stringify(data.data));
+        } catch {
+            // fallback: update locally only
+            if (!user) return;
+            const updated = { ...user, ...updatedFields };
+            setUser(updated);
+            localStorage.setItem('routesync_user', JSON.stringify(updated));
+        }
     };
 
     return (

@@ -7,6 +7,7 @@ import {
     MapPin, Calendar, Users, ArrowRight, Star,
     Quote, ChevronRight, TrendingUp, Zap, Shield, Clock
 } from 'lucide-react';
+import AISearchBar from '../components/ai/AISearchBar.jsx';
 
 const HERO_IMAGES = [
     'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1920&h=1080&fit=crop',
@@ -212,6 +213,58 @@ export default function Home() {
                                 <div className="text-2xl sm:text-3xl font-display font-bold text-orange text-shadow">{value}</div>
                                 <div className="text-sand/70 text-sm">{label}</div>
                             </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* ── AI Search + Mood Filters ── */}
+            <section className="section-padding bg-gradient-to-br from-charcoal to-charcoal/95">
+                <div className="container-max">
+                    <div className="text-center mb-8">
+                        <span className="inline-flex items-center gap-2 bg-orange/20 border border-orange/30 text-orange px-4 py-1.5 rounded-full text-sm font-medium mb-4">
+                            <Zap className="w-3.5 h-3.5" /> AI-Powered Search
+                        </span>
+                        <h2 className="text-3xl sm:text-4xl font-display font-bold text-ivory mb-3">
+                            Search in <span className="text-orange">Plain English</span>
+                        </h2>
+                        <p className="text-sand/70 max-w-xl mx-auto">Just describe what you want — our AI understands you.</p>
+                    </div>
+                    <div className="max-w-3xl mx-auto">
+                        <AISearchBar />
+                    </div>
+
+                    {/* Mood tiles */}
+                    <div className="mt-10">
+                        <p className="text-center text-sand/60 text-sm mb-5">Or pick a travel mood →</p>
+                        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 max-w-3xl mx-auto">
+                            {[
+                                { mood: 'Relaxing', emoji: '🌅', desc: 'Beach & Spa', color: 'from-blue-800 to-blue-600' },
+                                { mood: 'Adventure', emoji: '🏔️', desc: 'Trek & Wild', color: 'from-green-800 to-green-600' },
+                                { mood: 'Romantic', emoji: '💑', desc: 'Couples', color: 'from-pink-800 to-pink-600' },
+                                { mood: 'Family', emoji: '👨‍👩‍👧‍👦', desc: 'Kids & Fun', color: 'from-yellow-700 to-yellow-500' },
+                                { mood: 'Solo', emoji: '🎒', desc: 'Budget & Free', color: 'from-orange/80 to-orange' },
+                            ].map(({ mood, emoji, desc, color }) => (
+                                <Link key={mood} to={`/holidays?mood=${mood.toLowerCase()}`}
+                                    className={`group bg-gradient-to-br ${color} rounded-2xl p-4 text-center cursor-pointer hover:scale-105 transition-all duration-300 shadow-lg`}>
+                                    <div className="text-3xl mb-2 group-hover:scale-110 transition-transform">{emoji}</div>
+                                    <p className="text-white font-semibold text-sm">{mood}</p>
+                                    <p className="text-white/70 text-xs">{desc}</p>
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* AI Feature links */}
+                    <div className="flex flex-wrap justify-center gap-3 mt-8">
+                        {[
+                            { to: '/trip-planner', emoji: '🗺️', label: 'AI Trip Planner' },
+                            { to: '/budget', emoji: '🎯', label: 'Budget Optimizer' },
+                            { to: '/travel-buddies', emoji: '🤝', label: 'Travel Buddy' },
+                        ].map(({ to, emoji, label }) => (
+                            <Link key={to} to={to} className="flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-sand px-4 py-2.5 rounded-xl text-sm font-medium transition-all">
+                                <span>{emoji}</span> {label}
+                            </Link>
                         ))}
                     </div>
                 </div>

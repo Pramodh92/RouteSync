@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Bus, Star, Clock, Wifi, Zap, Coffee, ArrowRight } from 'lucide-react';
 import { useBooking } from '../../context/BookingContext';
 import Loader from '../../components/ui/Loader';
+import { api } from '../../services/api.js';
 
 export default function BusResults() {
     const { searchData, startBooking } = useBooking();
@@ -12,7 +13,7 @@ export default function BusResults() {
     const [typeFilter, setTypeFilter] = useState('all');
 
     useEffect(() => {
-        fetch('/data/buses.json').then(r => r.json()).then(d => { setBuses(d); setLoading(false); });
+        api.buses.list().then(res => { setBuses(res.data); setLoading(false); });
     }, []);
 
     const filtered = buses.filter(b => typeFilter === 'all' || b.type.toLowerCase().includes(typeFilter.toLowerCase()));

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Clock, Star, Heart, ArrowRight, Tag } from 'lucide-react';
+import { api } from '../../services/api.js';
 
 export default function HolidayPackages() {
     const [packages, setPackages] = useState([]);
@@ -8,11 +9,11 @@ export default function HolidayPackages() {
     const [themeFilter, setThemeFilter] = useState('all');
 
     useEffect(() => {
-        fetch('/data/packages.json').then(r => r.json()).then(d => { setPackages(d); setLoading(false); });
+        api.holidays.list().then(res => { setPackages(res.data); setLoading(false); });
     }, []);
 
-    const themes = ['all', ...new Set(packages.flatMap(p => p.themes || []))];
-    const filtered = themeFilter === 'all' ? packages : packages.filter(p => p.themes?.includes(themeFilter));
+    const themes = ['all', ...new Set(packages.map(p => p.category).filter(Boolean))];
+    const filtered = themeFilter === 'all' ? packages : packages.filter(p => p.category === themeFilter);
 
     return (
         <div className="min-h-screen bg-ivory pt-20">

@@ -3,6 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useBooking } from '../../context/BookingContext';
 import { Plane, User, Mail, Phone, ArrowRight, ChevronDown, ChevronUp } from 'lucide-react';
 import Loader from '../../components/ui/Loader';
+import { api } from '../../services/api.js';
+import TripHealthScore from '../../components/ai/TripHealthScore.jsx';
 
 export default function FlightBooking() {
     const { id } = useParams();
@@ -16,12 +18,15 @@ export default function FlightBooking() {
     const [errors, setErrors] = useState({});
 
     useEffect(() => {
-        fetch('/data/flights.json')
-            .then(r => r.json())
-            .then(data => {
-                const found = data.find(f => f.id === id) || data[0];
-                setFlight(found);
-                setLoading(false);
+        api.flights.get(id)
+            .then(res => { setFlight(res.data); setLoading(false); })
+            .catch(() => {
+                // fallback: load list and find by id
+                api.flights.list().then(r => {
+                    const found = r.data.find(f => f.id === id) || r.data[0];
+                    setFlight(found);
+                    setLoading(false);
+                }).catch(() => setLoading(false));
             });
     }, [id]);
 
@@ -209,6 +214,14 @@ export default function FlightBooking() {
                                 </div>
                             </div>
                         </div>
+                        <TripHealthScore
+                            type="flight"
+                            item={flight}
+                            totalAmount={totalPrice}
+                            date={flight.departureDate}
+                            destination={flight.to}
+                            passengers={cart?.passengers?.adults || 1}
+                        />
                     </div>
                 </div>
             </div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { MapPin, Star, Wifi, Waves, Dumbbell, Coffee, Filter } from 'lucide-react';
 import Loader from '../../components/ui/Loader';
+import { api } from '../../services/api.js';
 
 const AMENITY_ICONS = { WiFi: Wifi, Pool: Waves, Gym: Dumbbell, Restaurant: Coffee };
 
@@ -12,7 +13,7 @@ export default function HotelListing() {
     const [catFilter, setCatFilter] = useState('all');
 
     useEffect(() => {
-        fetch('/data/hotels.json').then(r => r.json()).then(d => { setHotels(d); setLoading(false); });
+        api.hotels.list().then(res => { setHotels(res.data); setLoading(false); });
     }, []);
 
     const filtered = hotels

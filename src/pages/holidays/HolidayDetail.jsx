@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { MapPin, Clock, Star, Heart, Check, X, ChevronDown, ChevronUp } from 'lucide-react';
 import { useBooking } from '../../context/BookingContext';
 import Loader from '../../components/ui/Loader';
+import { api } from '../../services/api.js';
+import DestinationIntel from '../../components/ai/DestinationIntel.jsx';
 
 export default function HolidayDetail() {
     const { id } = useParams();
@@ -14,10 +16,9 @@ export default function HolidayDetail() {
     const [travelers, setTravelers] = useState(2);
 
     useEffect(() => {
-        fetch('/data/packages.json').then(r => r.json()).then(data => {
-            setPkg(data.find(p => p.id === id) || data[0]);
-            setLoading(false);
-        });
+        api.holidays.get(id)
+            .then(res => { setPkg(res.data); setLoading(false); })
+            .catch(() => setLoading(false));
     }, [id]);
 
     if (loading) return <div className="min-h-screen flex items-center justify-center pt-20"><Loader size="lg" /></div>;
@@ -115,6 +116,11 @@ export default function HolidayDetail() {
                                     )}
                                 </div>
                             ))}
+                        </div>
+
+                        {/* AI Destination Intel */}
+                        <div className="mt-4">
+                            <DestinationIntel destination={pkg.destination || pkg.title?.split(' ').slice(-1)[0] || 'India'} />
                         </div>
                     </div>
 

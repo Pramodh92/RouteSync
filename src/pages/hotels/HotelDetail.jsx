@@ -3,6 +3,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { MapPin, Star, Wifi, Check, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { useBooking } from '../../context/BookingContext';
 import Loader from '../../components/ui/Loader';
+import { api } from '../../services/api.js';
+import WeatherCard from '../../components/ai/WeatherCard.jsx';
+import DestinationIntel from '../../components/ai/DestinationIntel.jsx';
 
 export default function HotelDetail() {
     const { id } = useParams();
@@ -15,12 +18,13 @@ export default function HotelDetail() {
     const [selectedRoom, setSelectedRoom] = useState(null);
 
     useEffect(() => {
-        fetch('/data/hotels.json').then(r => r.json()).then(data => {
-            const h = data.find(x => x.id === id) || data[0];
-            setHotel(h);
-            setSelectedRoom(h.rooms[0]);
-            setLoading(false);
-        });
+        api.hotels.get(id)
+            .then(res => {
+                setHotel(res.data);
+                setSelectedRoom(res.data.rooms[0]);
+                setLoading(false);
+            })
+            .catch(() => setLoading(false));
     }, [id]);
 
     if (loading) return <div className="min-h-screen flex items-center justify-center pt-20"><Loader size="lg" /></div>;
@@ -102,6 +106,10 @@ export default function HotelDetail() {
                                 </div>
                             ))}
                         </div>
+
+                        {/* AI cards */}
+                        <WeatherCard city={hotel.city || hotel.address?.split(',').pop()?.trim()} className="mb-4" />
+                        <DestinationIntel destination={hotel.city || hotel.address?.split(',')[hotel.address?.split(',').length - 2]?.trim() || 'Unknown'} hotelId={id} />
                     </div>
 
                     {/* Booking Sidebar */}

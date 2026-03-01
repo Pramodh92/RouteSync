@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Train, Clock, ArrowRight, Filter } from 'lucide-react';
 import { useBooking } from '../../context/BookingContext';
 import Loader from '../../components/ui/Loader';
+import { api } from '../../services/api.js';
 
 export default function TrainResults() {
     const { searchData, startBooking } = useBooking();
@@ -12,7 +13,7 @@ export default function TrainResults() {
     const [classFilter, setClassFilter] = useState('all');
 
     useEffect(() => {
-        fetch('/data/trains.json').then(r => r.json()).then(d => { setTrains(d); setLoading(false); });
+        api.trains.list().then(res => { setTrains(res.data); setLoading(false); });
     }, []);
 
     const handleBook = (train, cls) => {

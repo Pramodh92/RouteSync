@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Tag, Clock, ChevronRight, Copy, CheckCircle } from 'lucide-react';
+import { api } from '../services/api.js';
 
 export default function Offers() {
     const [offers, setOffers] = useState([]);
@@ -8,7 +9,7 @@ export default function Offers() {
     const [catFilter, setCatFilter] = useState('all');
 
     useEffect(() => {
-        fetch('/data/offers.json').then(r => r.json()).then(d => { setOffers(d); setLoading(false); });
+        api.offers.list().then(res => { setOffers(res.data); setLoading(false); });
     }, []);
 
     const handleCopy = (code) => {
@@ -56,7 +57,7 @@ export default function Offers() {
                                     <div className="absolute inset-0 bg-gradient-to-t from-charcoal/70 to-transparent" />
                                     <div className="absolute top-3 left-3">
                                         <span className="bg-orange text-white text-xs font-bold px-2.5 py-1.5 rounded-lg">
-                                            {offer.discountType === 'percentage' ? `${offer.discountValue}% OFF` : `₹${offer.discountValue} OFF`}
+                                            {offer.type === 'percentage' ? `${offer.discount}% OFF` : `₹${offer.discount} OFF`}
                                         </span>
                                     </div>
                                     <div className="absolute bottom-3 left-3">
@@ -79,13 +80,13 @@ export default function Offers() {
                                         </button>
                                     </div>
 
-                                    {offer.minBookingAmount && (
-                                        <p className="text-xs text-warmgray">Min. booking: ₹{offer.minBookingAmount.toLocaleString()}</p>
+                                    {offer.minAmount && (
+                                        <p className="text-xs text-warmgray">Min. booking: ₹{offer.minAmount.toLocaleString()}</p>
                                     )}
-                                    {offer.validity && (
+                                    {offer.validUntil && (
                                         <div className="flex items-center gap-1 text-xs text-warmgray mt-1">
                                             <Clock className="w-3 h-3" />
-                                            <span>Valid till: {offer.validity}</span>
+                                            <span>Valid till: {offer.validUntil}</span>
                                         </div>
                                     )}
                                 </div>

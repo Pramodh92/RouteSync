@@ -4,6 +4,8 @@ import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import Loader from './components/ui/Loader';
 import { useAuth } from './context/AuthContext';
+import { AIProvider } from './context/AIContext.jsx';
+import ChatBot from './components/ai/ChatBot.jsx';
 
 // Lazy imports - Auth
 const Login = lazy(() => import('./pages/auth/Login'));
@@ -64,13 +66,19 @@ const Terms = lazy(() => import('./pages/support/Terms'));
 const Privacy = lazy(() => import('./pages/support/Privacy'));
 const TravelGuides = lazy(() => import('./pages/blog/TravelGuides'));
 
-// Layout wrapper that adds Navbar and Footer
+// Lazy imports - AI pages
+const TripPlanner = lazy(() => import('./pages/ai/TripPlanner'));
+const TravelBuddies = lazy(() => import('./pages/ai/TravelBuddies'));
+const BudgetPlanner = lazy(() => import('./pages/ai/BudgetPlanner'));
+
+// Layout wrapper that adds Navbar, Footer, and floating ChatBot
 function PageWrapper({ children, hideFooter = false }) {
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
       <main className="flex-1">{children}</main>
       {!hideFooter && <Footer />}
+      <ChatBot />
     </div>
   );
 }
@@ -90,70 +98,77 @@ const SuspenseFallback = (
 
 export default function App() {
   return (
-    <Suspense fallback={SuspenseFallback}>
-      <Routes>
-        {/* Auth pages - no navbar/footer */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+    <AIProvider>
+      <Suspense fallback={SuspenseFallback}>
+        <Routes>
+          {/* Auth pages - no navbar/footer */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
-        {/* Public pages */}
-        <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
-        <Route path="/offers" element={<PageWrapper><Offers /></PageWrapper>} />
+          {/* Public pages */}
+          <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
+          <Route path="/offers" element={<PageWrapper><Offers /></PageWrapper>} />
 
-        {/* Flights */}
-        <Route path="/flights" element={<PageWrapper><FlightSearch /></PageWrapper>} />
-        <Route path="/flights/results" element={<PageWrapper><FlightResults /></PageWrapper>} />
-        <Route path="/flights/book/:id" element={<PageWrapper><FlightBooking /></PageWrapper>} />
-        <Route path="/flights/confirmation" element={<PageWrapper hideFooter><FlightConfirmation /></PageWrapper>} />
+          {/* Flights */}
+          <Route path="/flights" element={<PageWrapper><FlightSearch /></PageWrapper>} />
+          <Route path="/flights/results" element={<PageWrapper><FlightResults /></PageWrapper>} />
+          <Route path="/flights/book/:id" element={<PageWrapper><FlightBooking /></PageWrapper>} />
+          <Route path="/flights/confirmation" element={<PageWrapper hideFooter><FlightConfirmation /></PageWrapper>} />
 
-        {/* Hotels */}
-        <Route path="/hotels" element={<PageWrapper><HotelSearch /></PageWrapper>} />
-        <Route path="/hotels/listing" element={<PageWrapper><HotelListing /></PageWrapper>} />
-        <Route path="/hotels/:id" element={<PageWrapper><HotelDetail /></PageWrapper>} />
-        <Route path="/hotels/book/:id" element={<PageWrapper><HotelBooking /></PageWrapper>} />
-        <Route path="/hotels/confirmation" element={<PageWrapper hideFooter><HotelConfirmation /></PageWrapper>} />
+          {/* Hotels */}
+          <Route path="/hotels" element={<PageWrapper><HotelSearch /></PageWrapper>} />
+          <Route path="/hotels/listing" element={<PageWrapper><HotelListing /></PageWrapper>} />
+          <Route path="/hotels/:id" element={<PageWrapper><HotelDetail /></PageWrapper>} />
+          <Route path="/hotels/book/:id" element={<PageWrapper><HotelBooking /></PageWrapper>} />
+          <Route path="/hotels/confirmation" element={<PageWrapper hideFooter><HotelConfirmation /></PageWrapper>} />
 
-        {/* Trains */}
-        <Route path="/trains" element={<PageWrapper><TrainSearch /></PageWrapper>} />
-        <Route path="/trains/results" element={<PageWrapper><TrainResults /></PageWrapper>} />
-        <Route path="/trains/book/:id" element={<PageWrapper><TrainBooking /></PageWrapper>} />
-        <Route path="/trains/confirmation" element={<PageWrapper hideFooter><TrainConfirmation /></PageWrapper>} />
+          {/* Trains */}
+          <Route path="/trains" element={<PageWrapper><TrainSearch /></PageWrapper>} />
+          <Route path="/trains/results" element={<PageWrapper><TrainResults /></PageWrapper>} />
+          <Route path="/trains/book/:id" element={<PageWrapper><TrainBooking /></PageWrapper>} />
+          <Route path="/trains/confirmation" element={<PageWrapper hideFooter><TrainConfirmation /></PageWrapper>} />
 
-        {/* Buses */}
-        <Route path="/buses" element={<PageWrapper><BusSearch /></PageWrapper>} />
-        <Route path="/buses/results" element={<PageWrapper><BusResults /></PageWrapper>} />
-        <Route path="/buses/book/:id" element={<PageWrapper><BusBooking /></PageWrapper>} />
-        <Route path="/buses/confirmation" element={<PageWrapper hideFooter><BusConfirmation /></PageWrapper>} />
+          {/* Buses */}
+          <Route path="/buses" element={<PageWrapper><BusSearch /></PageWrapper>} />
+          <Route path="/buses/results" element={<PageWrapper><BusResults /></PageWrapper>} />
+          <Route path="/buses/book/:id" element={<PageWrapper><BusBooking /></PageWrapper>} />
+          <Route path="/buses/confirmation" element={<PageWrapper hideFooter><BusConfirmation /></PageWrapper>} />
 
-        {/* Cabs */}
-        <Route path="/cabs" element={<PageWrapper><CabSearch /></PageWrapper>} />
-        <Route path="/cabs/results" element={<PageWrapper><CabResults /></PageWrapper>} />
-        <Route path="/cabs/book/:id" element={<PageWrapper><CabBooking /></PageWrapper>} />
-        <Route path="/cabs/confirmation" element={<PageWrapper hideFooter><CabConfirmation /></PageWrapper>} />
+          {/* Cabs */}
+          <Route path="/cabs" element={<PageWrapper><CabSearch /></PageWrapper>} />
+          <Route path="/cabs/results" element={<PageWrapper><CabResults /></PageWrapper>} />
+          <Route path="/cabs/book/:id" element={<PageWrapper><CabBooking /></PageWrapper>} />
+          <Route path="/cabs/confirmation" element={<PageWrapper hideFooter><CabConfirmation /></PageWrapper>} />
 
-        {/* Holidays */}
-        <Route path="/holidays" element={<PageWrapper><HolidayPackages /></PageWrapper>} />
-        <Route path="/holidays/:id" element={<PageWrapper><HolidayDetail /></PageWrapper>} />
-        <Route path="/holidays/book/:id" element={<PageWrapper><HolidayBooking /></PageWrapper>} />
-        <Route path="/holidays/confirmation" element={<PageWrapper hideFooter><HolidayConfirmation /></PageWrapper>} />
+          {/* Holidays */}
+          <Route path="/holidays" element={<PageWrapper><HolidayPackages /></PageWrapper>} />
+          <Route path="/holidays/:id" element={<PageWrapper><HolidayDetail /></PageWrapper>} />
+          <Route path="/holidays/book/:id" element={<PageWrapper><HolidayBooking /></PageWrapper>} />
+          <Route path="/holidays/confirmation" element={<PageWrapper hideFooter><HolidayConfirmation /></PageWrapper>} />
 
-        {/* Protected account pages */}
-        <Route path="/dashboard" element={<ProtectedRoute><PageWrapper><Dashboard /></PageWrapper></ProtectedRoute>} />
-        <Route path="/my-trips" element={<ProtectedRoute><PageWrapper><MyTrips /></PageWrapper></ProtectedRoute>} />
-        <Route path="/profile" element={<ProtectedRoute><PageWrapper><Profile /></PageWrapper></ProtectedRoute>} />
-        <Route path="/wallet" element={<ProtectedRoute><PageWrapper><Wallet /></PageWrapper></ProtectedRoute>} />
+          {/* Protected account pages */}
+          <Route path="/dashboard" element={<ProtectedRoute><PageWrapper><Dashboard /></PageWrapper></ProtectedRoute>} />
+          <Route path="/my-trips" element={<ProtectedRoute><PageWrapper><MyTrips /></PageWrapper></ProtectedRoute>} />
+          <Route path="/profile" element={<ProtectedRoute><PageWrapper><Profile /></PageWrapper></ProtectedRoute>} />
+          <Route path="/wallet" element={<ProtectedRoute><PageWrapper><Wallet /></PageWrapper></ProtectedRoute>} />
 
-        {/* Support & Content */}
-        <Route path="/about-us" element={<PageWrapper><AboutUs /></PageWrapper>} />
-        <Route path="/contact-us" element={<PageWrapper><ContactUs /></PageWrapper>} />
-        <Route path="/support" element={<PageWrapper><HelpCenter /></PageWrapper>} />
-        <Route path="/terms" element={<PageWrapper><Terms /></PageWrapper>} />
-        <Route path="/privacy" element={<PageWrapper><Privacy /></PageWrapper>} />
-        <Route path="/travel-guides" element={<PageWrapper><TravelGuides /></PageWrapper>} />
+          {/* Support & Content */}
+          <Route path="/about-us" element={<PageWrapper><AboutUs /></PageWrapper>} />
+          <Route path="/contact-us" element={<PageWrapper><ContactUs /></PageWrapper>} />
+          <Route path="/support" element={<PageWrapper><HelpCenter /></PageWrapper>} />
+          <Route path="/terms" element={<PageWrapper><Terms /></PageWrapper>} />
+          <Route path="/privacy" element={<PageWrapper><Privacy /></PageWrapper>} />
+          <Route path="/travel-guides" element={<PageWrapper><TravelGuides /></PageWrapper>} />
 
-        {/* 404 fallback */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </Suspense>
+          {/* AI pages */}
+          <Route path="/trip-planner" element={<PageWrapper><TripPlanner /></PageWrapper>} />
+          <Route path="/travel-buddies" element={<PageWrapper><TravelBuddies /></PageWrapper>} />
+          <Route path="/budget" element={<PageWrapper><BudgetPlanner /></PageWrapper>} />
+
+          {/* 404 fallback */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
+    </AIProvider>
   );
 }

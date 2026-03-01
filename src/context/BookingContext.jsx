@@ -1,13 +1,10 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { api, getToken } from '../services/api.js';
 
 const BookingContext = createContext(null);
 
 export function useBooking() {
     return useContext(BookingContext);
-}
-
-function generateId(prefix = 'BK') {
-    return `${prefix}${Date.now().toString(36).toUpperCase()}`;
 }
 
 function generatePNR() {
@@ -24,6 +21,7 @@ export function BookingProvider({ children }) {
 
     const [cart, setCart] = useState(null);
 
+    // Bookings: load from API if logged in, else from localStorage
     const [bookings, setBookings] = useState(() => {
         try {
             const stored = localStorage.getItem('routesync_bookings');
@@ -31,45 +29,84 @@ export function BookingProvider({ children }) {
         } catch { return []; }
     });
 
-    const saveBookings = (updated) => {
-        setBookings(updated);
-        try { localStorage.setItem('routesync_bookings', JSON.stringify(updated)); } catch { }
-    };
+    // Sync bookings from API whenever a token is available
+    useEffect(() => {
+        if (getToken()) {
+            api.bookings.list()
+                .then(res => {
+                    // Map API response fields to match existing UI shape
+                    const mapped = res.data.map(b => ({
+                        id: b.reference || b.id,
+                        pnr: b.reference || b.id,
+                        type: b.type,
+                        item: b.details || {},
+                        passengers: b.passengers || [],
+                        totalAmount: b.totalAmount,
+                        status: b.status,
+                        createdAt: b.bookedAt,
+                    }));
+                    setBookings(mapped);
+                    localStorage.setItem('routesync_bookings', JSON.stringify(mapped));
+                })
+                .catch(() => { /* keep localStorage fallback */ });
+        }
+    }, []);
 
-    const updateSearch = (data) => {
-        setSearchData(prev => ({ ...prev, ...data }));
-    };
+    const updateSearch = (data) => setSearchData(prev => ({ ...prev, ...data }));
+    const startBooking = (item, type) => setCart({ item, type, addOns: [], totalPrice: item.price || 0 });
+    const updateCart = (updates) => setCart(prev => prev ? { ...prev, ...updates } : prev);
 
-    const startBooking = (item, type) => {
-        setCart({ item, type, addOns: [], totalPrice: item.price || 0 });
-    };
+    const confirmBooking = async (passengers, paymentInfo) => {
+        const totalAmount = cart?.totalPrice || cart?.item?.price || 0;
+        const type = cart?.type?.replace(/s$/, '') || 'flight'; // 'flights' → 'flight'
 
-    const updateCart = (updates) => {
-        setCart(prev => prev ? { ...prev, ...updates } : prev);
-    };
+        // ─── Call API if logged in ───────────────────────────────────────────
+        let apiBooking = null;
+        if (getToken()) {
+            try {
+                const res = await api.bookings.create({
+                    type,
+                    itemId: cart?.item?.id || null,
+                    details: cart?.item || {},
+                    passengers,
+                    totalAmount,
+                    paymentMethod: paymentInfo?.method || 'card',
+                });
+                apiBooking = res.data;
+            } catch { /* fall through to local */ }
+        }
 
-    const confirmBooking = (passengers, paymentInfo) => {
+        // ─── Local booking (UI state) ─────────────────────────────────────────
         const booking = {
-            id: generateId('BK'),
-            pnr: generatePNR(),
+            id: apiBooking?.reference || `BK${Date.now().toString(36).toUpperCase()}`,
+            pnr: apiBooking?.reference || generatePNR(),
             type: cart?.type || 'flights',
             item: cart?.item,
             passengers,
             paymentInfo,
-            totalAmount: cart?.totalPrice || cart?.item?.price || 0,
+            totalAmount,
             addOns: cart?.addOns || [],
             status: 'confirmed',
-            createdAt: new Date().toISOString(),
+            createdAt: apiBooking?.bookedAt || new Date().toISOString(),
         };
+
         const updated = [...bookings, booking];
-        saveBookings(updated);
+        setBookings(updated);
+        try { localStorage.setItem('routesync_bookings', JSON.stringify(updated)); } catch { }
         setCart(null);
         return booking;
     };
 
-    const cancelBooking = (bookingId) => {
+    const cancelBooking = async (bookingId) => {
+        // Optimistic update
         const updated = bookings.map(b => b.id === bookingId ? { ...b, status: 'cancelled' } : b);
-        saveBookings(updated);
+        setBookings(updated);
+        try { localStorage.setItem('routesync_bookings', JSON.stringify(updated)); } catch { }
+
+        // API cancel (best-effort)
+        if (getToken()) {
+            try { await api.bookings.cancel(bookingId); } catch { }
+        }
     };
 
     return (

@@ -6,9 +6,14 @@ import {
     ArrowRight, Filter, ChevronDown, Star, ArrowUpDown
 } from 'lucide-react';
 import Loader from '../../components/ui/Loader';
+import { api } from '../../services/api.js';
+import DealScore, { computeDealScore } from '../../components/ai/DealScore.jsx';
+import WeatherCard from '../../components/ai/WeatherCard.jsx';
+import FarePredictor from '../../components/ai/FarePredictor.jsx';
 
 function FlightCard({ flight, onBook }) {
     const stops = flight.stops === 0 ? 'Non-stop' : `${flight.stops} Stop`;
+    const score = computeDealScore(flight, 'flight');
     return (
         <div className="card p-5 hover:-translate-y-0.5 transition-all duration-300 animate-fade-in">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
@@ -58,6 +63,7 @@ function FlightCard({ flight, onBook }) {
                     <div className="text-right">
                         <p className="text-2xl font-bold text-charcoal">₹{flight.price.toLocaleString()}</p>
                         <p className="text-warmgray text-xs">{flight.class} · {flight.seats} seats left</p>
+                        <div className="mt-1"><DealScore score={score} compact /></div>
                     </div>
                     <button onClick={() => onBook(flight)} className="btn-primary text-sm px-5 py-2.5">
                         Book Now
@@ -78,9 +84,8 @@ export default function FlightResults() {
     const [stopsFilter, setStopsFilter] = useState('all');
 
     useEffect(() => {
-        fetch('/data/flights.json')
-            .then(r => r.json())
-            .then(data => { setFlights(data); setLoading(false); })
+        api.flights.list()
+            .then(res => { setFlights(res.data); setLoading(false); })
             .catch(() => setLoading(false));
     }, []);
 
@@ -110,10 +115,10 @@ export default function FlightResults() {
 
             <div className="max-w-6xl mx-auto px-4 py-8">
                 <div className="flex flex-col lg:flex-row gap-6">
-                    {/* Filters */}
+                    {/* Filters + AI Sidebar */}
                     <aside className="lg:w-64 shrink-0">
-                        <div className="card p-5 sticky top-24">
-                            <h3 className="font-semibold text-charcoal mb-4 flex items-center gap-2">
+                        <div className="card p-5 sticky top-24 space-y-4">
+                            <h3 className="font-semibold text-charcoal flex items-center gap-2">
                                 <Filter className="w-4 h-4 text-orange" /> Filters
                             </h3>
 
