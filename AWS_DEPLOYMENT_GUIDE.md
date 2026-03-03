@@ -26,7 +26,7 @@
 3. Attach these policies:
    - `AmazonSSMManagedInstanceCore` (for SSM Session Manager)
    - `SecretsManagerReadWrite` (for Secrets Manager endpoint)
-   - `AmazonS3ReadOnlyAccess` (for S3 Gateway Endpoint)
+   - `AmazonDynamoDBFullAccess` (for DynamoDB access from EC2)
    - `CloudWatchAgentServerPolicy`
 4. Role name: `VanguardEC2Role` → **Create role**
 
@@ -120,12 +120,10 @@ Go to **VPC → Security Groups → Create security group** (VPC: `VanguardVPC`)
 
 > ⚠️ No SSH (22) inbound — we use SSM Session Manager instead!
 
-### SG-3: `rds-sg` (RDS Database)
+### SG-3: No Database SG Needed ✅
 
-| Type | Protocol | Port | Source | Description |
-|---|---|---|---|---|
-| **Inbound** | MySQL/Aurora | 3306 | SG: `ec2-sg` | From EC2 only |
-| **Outbound** | All traffic | All | `0.0.0.0/0` | |
+> [!NOTE]
+> DynamoDB is a **fully managed serverless service** — it has no server, no port, and no security group. EC2 instances reach DynamoDB via the **DynamoDB Gateway Endpoint** (Phase 7) using IAM authentication. The `VanguardEC2Role` with `AmazonDynamoDBFullAccess` handles all access control.
 
 ---
 
@@ -175,12 +173,26 @@ Go to **VPC → Security Groups → Create security group** (VPC: `VanguardVPC`)
 
 ---
 
-## PHASE 7 — S3 Gateway Endpoint
+## PHASE 7 — Gateway Endpoints (S3 + DynamoDB)
+
+> [!TIP]
+> Gateway endpoints are **free** and keep S3/DynamoDB traffic inside the AWS network — no NAT Gateway charges for these calls.
+
+### 7.1 S3 Gateway Endpoint
 
 1. **VPC → Endpoints → Create endpoint**
 2. Name: `VanguardS3Endpoint`
 3. Service category: **AWS services**
 4. Search: `com.amazonaws.us-east-1.s3` → select the **Gateway** type
+5. VPC: `VanguardVPC`
+6. Route tables: select **both** `public-rt` and `private-rt` → Create endpoint
+
+### 7.2 DynamoDB Gateway Endpoint
+
+1. **VPC → Endpoints → Create endpoint**
+2. Name: `VanguardDynamoDBEndpoint`
+3. Service category: **AWS services**
+4. Search: `com.amazonaws.us-east-1.dynamodb` → select the **Gateway** type
 5. VPC: `VanguardVPC`
 6. Route tables: select **both** `public-rt` and `private-rt` → Create endpoint
 
@@ -217,33 +229,58 @@ Same settings as SSM endpoints above.
 
 ---
 
-## PHASE 9 — RDS: Multi-AZ MySQL
+## PHASE 9 — DynamoDB: Create Tables
 
-### 9.1 DB Subnet Group
+> [!NOTE]
+> DynamoDB is **serverless** — no cluster, no VMs, no Security Group, no subnet. It is instantly available in your AWS account. Access from EC2 is handled by IAM (`VanguardEC2Role`) + the DynamoDB Gateway Endpoint you created in Phase 7.
 
-1. **RDS → Subnet groups → Create DB subnet group**
-2. Name: `vanguard-db-subnet-group`
-3. VPC: `VanguardVPC`
-4. Add subnets: `private-db-1a` (us-east-1a) + `private-db-1b` (us-east-1b) → Create
+### 9.1 Create the Users Table
 
-### 9.2 Create RDS MySQL
+1. Go to **DynamoDB → Tables → Create table**
+2. Table name: `routesync-users`
+3. Partition key: `userId` (String)
+4. Sort key: *(leave blank)*
+5. Table settings: **Customize settings**
+   - Read/write capacity: **On-demand** (pay-per-request, best for 1-hour test)
+   - Encryption: AWS owned key (default)
+6. Click **Create table**
 
-1. **RDS → Databases → Create database**
-2. Engine: **MySQL**, Version: 8.0.x
-3. Template: **Production** (enables Multi-AZ)
-4. DB Identifier: `vanguard-mysql`
-5. Master username: `admin`, set a password → **store this in Secrets Manager later**
-6. DB Instance class: `db.t3.micro` (cheapest for testing)
-7. Storage: 20 GiB gp2, **disable autoscaling** for cost
-8. Availability: ✅ **Multi-AZ DB instance**
-9. VPC: `VanguardVPC`, DB subnet group: `vanguard-db-subnet-group`
-10. Public access: ❌ **No**
-11. VPC security group: `rds-sg`
-12. Database name: `routesync`
-13. **Create database** (takes ~5–10 min)
+### 9.2 Create the Bookings Table
+
+1. **DynamoDB → Tables → Create table**
+2. Table name: `routesync-bookings`
+3. Partition key: `bookingId` (String)
+4. Sort key: `userId` (String) — allows querying all bookings per user
+5. Table settings: **Customize settings → On-demand** capacity → **Create table**
+
+### 9.3 Create the Routes Table
+
+1. **DynamoDB → Tables → Create table**
+2. Table name: `routesync-routes`
+3. Partition key: `routeId` (String)
+4. Sort key: *(leave blank)*
+5. Table settings: **On-demand** → **Create table**
+
+### 9.4 Add a Global Secondary Index (GSI) to Bookings
+
+> Allows querying bookings by userId across all bookingIds.
+
+1. Open `routesync-bookings` table → **Indexes tab → Create index**
+2. Partition key: `userId` (String)
+3. Index name: `userId-index`
+4. Projected attributes: **All** → **Create index**
+
+### 9.5 Verify Tables Are Active
+
+1. In DynamoDB → Tables, confirm all 3 tables show **Status: Active** (takes <1 min)
+2. Click any table → **Explore table items** → you can manually insert test data here
 
 > [!TIP]
-> After RDS is created, go to **Secrets Manager → Store a new secret → RDS credentials** and save the DB password there.
+> **Connecting from your app (server-side):** Use the AWS SDK. The EC2 instance has `VanguardEC2Role` so no access keys needed — just use the region:
+> ```js
+> import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+> const client = new DynamoDBClient({ region: "us-east-1" });
+> ```
 
 ---
 
@@ -486,21 +523,20 @@ echo "=== ✅ RouteSync deployed successfully! ==="
 | 1 | ASG | EC2 → Auto Scaling Groups → Delete |
 | 2 | ALB + Target Group | EC2 → Load Balancers → Delete |
 | 3 | EC2 instances | Will terminate when ASG is deleted |
-| 4 | RDS Database | RDS → Databases → Modify → Disable multi-AZ → Delete (no final snapshot) |
+| 4 | DynamoDB Tables | DynamoDB → Tables → Delete `routesync-users`, `routesync-bookings`, `routesync-routes` |
 | 5 | NAT Gateway | VPC → NAT Gateways → Delete |
-| 6 | VPC Endpoints | VPC → Endpoints → Delete all 5 |
+| 6 | VPC Endpoints | VPC → Endpoints → Delete all 6 (S3, DynamoDB, SSM x3, Secrets Manager) |
 | 7 | Elastic IP | EC2 → Elastic IPs → Release |
 | 8 | CloudTrail | CloudTrail → Trails → Delete |
 | 9 | S3 Buckets | S3 → Empty bucket first → Delete bucket |
 | 10 | CloudWatch Alarms | CloudWatch → Alarms → Delete |
-| 11 | RDS Subnet Group | RDS → Subnet groups → Delete |
-| 12 | Security Groups | VPC → Security Groups → Delete (ec2-sg, rds-sg, alb-sg) |
-| 13 | NACLs | VPC → NACLs → Delete custom ones |
-| 14 | Route Tables | VPC → Route Tables → Delete private-rt, public-rt |
-| 15 | Subnets | VPC → Subnets → Delete all 6 |
-| 16 | Internet Gateway | Detach → Delete |
-| 17 | VPC | VPC → Your VPCs → Delete |
-| 18 | IAM Role | IAM → Roles → Delete VanguardEC2Role |
+| 11 | Security Groups | VPC → Security Groups → Delete (`ec2-sg`, `alb-sg`, `endpoint-sg`) |
+| 12 | NACLs | VPC → NACLs → Delete custom ones |
+| 13 | Route Tables | VPC → Route Tables → Delete `private-rt`, `public-rt` |
+| 14 | Subnets | VPC → Subnets → Delete all 6 |
+| 15 | Internet Gateway | Detach → Delete |
+| 16 | VPC | VPC → Your VPCs → Delete |
+| 17 | IAM Role | IAM → Roles → Delete `VanguardEC2Role` |
 
 ---
 
@@ -536,18 +572,19 @@ VanguardIGW
 │  ┌──────▼──────┐       ┌──────▼──────┐      │
 │  │private-db-1a│       │private-db-1b│      │
 │  │10.0.3.0/24  │       │10.0.6.0/24  │      │
-│  │ [RDS Primary]│       │ [RDS Standby]│     │
+│  │  (reserved) │       │  (reserved) │      │
 │  └─────────────┘       └─────────────┘      │
 │                                             │
-│  [S3 Gateway Endpoint] [SSM PrivateLink]    │
-│  [Secrets Manager PrivateLink]              │
+│  [S3 GW Endpoint]  [DynamoDB GW Endpoint]   │
+│  [SSM PrivateLink] [Secrets Mgr PrivateLink] │
 └─────────────────────────────────────────────┘
-         │ SSM Session Manager
-         ▼
-      (Your Browser — no SSH!)
+         │ SSM Session Manager        │ IAM-auth
+         ▼                           ▼
+    (Your Browser)           AWS DynamoDB
+          (Serverless — no VPC, no port, no SG)
 ```
 
 ---
 
 > [!TIP]
-> **Cost Estimate for 1 hour:** NAT Gateway ~$0.05/hr, 2x t2.micro ~$0.02, RDS t3.micro Multi-AZ ~$0.04, ALB ~$0.02, VPC Endpoints ~$0.01 each. **Total ≈ $0.20–$0.50 for 1 hour** if you clean up promptly. RDS takes ~5 min to delete, so start cleanup at 55 min mark.
+> **Cost Estimate for 1 hour:** NAT Gateway ~$0.05/hr, 2× t2.micro ~$0.02, DynamoDB on-demand ~$0.00 (free tier covers first 25 GB + 200M requests/month), ALB ~$0.02, VPC Interface Endpoints ~$0.01 each. **Total ≈ $0.10–$0.20 for 1 hour** — DynamoDB is much cheaper than RDS! No need to rush cleanup for the database.
