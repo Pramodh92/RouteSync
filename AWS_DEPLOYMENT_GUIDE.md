@@ -42,6 +42,18 @@
 4. IPv4 CIDR: `10.0.0.0/16`
 5. Tenancy: Default → **Create VPC**
 
+### 2.1.1 Enable DNS Settings on VanguardVPC *(Required for Phase 8)*
+
+> [!IMPORTANT]
+> Without this, **VPC Interface Endpoints (Phase 8) will fail** with a DNS error. Do this immediately after creating the VPC.
+
+1. In **VPC → Your VPCs**, select `VanguardVPC`
+2. Click **Actions → Edit VPC settings**
+3. Enable **both** checkboxes:
+   - ✅ **Enable DNS resolution**
+   - ✅ **Enable DNS hostnames**
+4. Click **Save**
+
 ### 2.2 Create 6 Subnets (3 per AZ)
 
 Go to **VPC → Subnets → Create subnet** — select `VanguardVPC`, then add all 6:
@@ -85,9 +97,22 @@ For **each** public subnet (`public-subnet-1a`, `public-subnet-1b`):
 
 ### 4.2 NAT Gateway (for Private Subnet Internet Access)
 
-1. **VPC → NAT Gateways → Create NAT gateway**
-2. Name: `VanguardNAT`, Subnet: `public-subnet-1a`, Connectivity: **Public**
-3. Click **Allocate Elastic IP** → Create NAT gateway (takes ~2 min)
+1. Go to **VPC → NAT Gateways → Create NAT gateway**
+2. Fill in each field **exactly** as below:
+
+| Field | Value | Notes |
+|---|---|---|
+| **Name** | `VanguardNAT` | |
+| **Availability mode** | `Regional` | Select **Regional** — AWS auto-spans all AZs, no subnet needed |
+| **VPC** | `VanguardVPC` | Select from dropdown |
+| **Connectivity type** | `Public` | Keep default |
+| **Elastic IP allocation** | `Automatic` | AWS assigns the IP for you |
+
+3. Click **Create NAT gateway**
+4. ⏳ Wait **~2 minutes** until Status changes from `Pending` → **`Available`** before continuing to 4.3
+
+> [!IMPORTANT]
+> Do **not** proceed to Phase 4.3 until the NAT Gateway status is **Available**. Refresh the page to check.
 
 ### 4.3 Private Route Table
 
@@ -101,75 +126,121 @@ For **each** public subnet (`public-subnet-1a`, `public-subnet-1b`):
 
 ## PHASE 5 — Security Groups
 
-Go to **VPC → Security Groups → Create security group** (VPC: `VanguardVPC`)
+> [!IMPORTANT]
+> You will create **2 security groups** one at a time. For each one, go to **VPC → Security Groups → Create security group** and follow the steps below exactly.
 
-### SG-1: `alb-sg` (Application Load Balancer)
+---
 
-| Type | Protocol | Port | Source | Description |
+### SG-1: `alb-sg` — Load Balancer Security Group
+
+**Step 1 — Basic Details:**
+
+| Field | Value |
+|---|---|
+| Security group name | `alb-sg` |
+| Description | `ALB - public web traffic` |
+| VPC | Select `VanguardVPC` from dropdown |
+
+**Step 2 — Inbound Rules → click "Add rule":**
+
+| Type | Protocol | Port range | Source | Description |
 |---|---|---|---|---|
-| **Inbound** | HTTP | 80 | `0.0.0.0/0` | Public web traffic |
-| **Outbound** | All traffic | All | `0.0.0.0/0` | |
+| HTTP | TCP | 80 | `0.0.0.0/0` | Public HTTP traffic |
 
-### SG-2: `ec2-sg` (EC2 App Servers)
+**Step 3 — Outbound Rules:** Leave the default (All traffic → 0.0.0.0/0) — do NOT remove it.
 
-| Type | Protocol | Port | Source | Description |
-|---|---|---|---|---|
-| **Inbound** | HTTP | 80 | SG: `alb-sg` | From ALB only |
-| **Inbound** | HTTPS | 443 | SG: `alb-sg` | |
-| **Outbound** | All traffic | All | `0.0.0.0/0` | |
+**Step 4 →** Click **Create security group**
 
-> ⚠️ No SSH (22) inbound — we use SSM Session Manager instead!
+---
 
-### SG-3: No Database SG Needed ✅
+### SG-2: `ec2-sg` — EC2 App Server Security Group
+
+> [!IMPORTANT]
+> Create `alb-sg` first (above) before creating this one — you will need to reference it as a source.
+
+**Step 1 — Basic Details:**
+
+| Field | Value |
+|---|---|
+| Security group name | `ec2-sg` |
+| Description | `EC2 - accepts traffic from ALB only` |
+| VPC | Select `VanguardVPC` from dropdown |
+
+**Step 2 — Inbound Rules → click "Add rule" twice:**
+
+| # | Type | Protocol | Port range | Source | How to set Source |
+|---|---|---|---|---|---|
+| 1 | HTTP | TCP | 80 | `alb-sg` | Choose **Custom** → search for `alb-sg` |
+| 2 | HTTPS | TCP | 443 | `alb-sg` | Choose **Custom** → search for `alb-sg` |
+
+> ⚠️ **No SSH (port 22) rule** — we use SSM Session Manager instead. Never allow port 22.
+
+**Step 3 — Outbound Rules:** Leave the default (All traffic → 0.0.0.0/0).
+
+**Step 4 →** Click **Create security group**
+
+---
+
+### SG-3: DynamoDB — No Security Group Needed ✅
 
 > [!NOTE]
-> DynamoDB is a **fully managed serverless service** — it has no server, no port, and no security group. EC2 instances reach DynamoDB via the **DynamoDB Gateway Endpoint** (Phase 7) using IAM authentication. The `VanguardEC2Role` with `AmazonDynamoDBFullAccess` handles all access control.
+> DynamoDB is **serverless** — no server, no port, no SG required. EC2 reaches DynamoDB via the DynamoDB Gateway Endpoint (Phase 7) authenticated by IAM. Nothing to create here.
 
 ---
 
 ## PHASE 6 — Network ACLs
 
+> [!NOTE]
+> NACLs are stateless — you must explicitly allow **both inbound AND outbound** directions.
+> The **`*` DENY rule is automatic** in every NACL — AWS adds it by default. You do NOT manually enter it.
+
 ### 6.1 Public Subnet NACL
 
-1. **VPC → Network ACLs → Create network ACL**
-2. Name: `public-nacl`, VPC: `VanguardVPC` → Create
-3. **Subnet associations**: associate both public subnets
+**Create the NACL:**
+1. Go to **VPC → Network ACLs → Create network ACL**
+2. Name: `public-nacl`, VPC: `VanguardVPC` → **Create**
+3. Select `public-nacl` → **Actions → Edit subnet associations** → select `public-subnet-1a` and `public-subnet-1b` → Save
 
-**Inbound Rules:**
+**Inbound Rules** → Edit inbound rules → Add rule:
 
-| Rule # | Type | Protocol | Port | Source | Allow/Deny |
+| Rule # | Type | Protocol | Port range | Source | Allow/Deny |
 |---|---|---|---|---|---|
-| 100 | HTTP (80) | TCP | 80 | 0.0.0.0/0 | ALLOW |
-| 110 | HTTPS (443) | TCP | 443 | 0.0.0.0/0 | ALLOW |
-| 120 | Custom TCP | TCP | 1024-65535 | 0.0.0.0/0 | ALLOW |
-| * | All traffic | All | All | 0.0.0.0/0 | DENY |
+| 100 | Custom TCP | TCP | 80 | `0.0.0.0/0` | ALLOW |
+| 110 | Custom TCP | TCP | 443 | `0.0.0.0/0` | ALLOW |
+| 120 | Custom TCP | TCP | 1024-65535 | `0.0.0.0/0` | ALLOW |
 
-**Outbound Rules:**
+**Outbound Rules** → Edit outbound rules → Add rule:
 
-| Rule # | Type | Protocol | Port | Dest | Allow/Deny |
+| Rule # | Type | Protocol | Port range | Destination | Allow/Deny |
 |---|---|---|---|---|---|
-| 100 | All TCP | TCP | 0-65535 | 0.0.0.0/0 | ALLOW |
-| * | All traffic | All | All | 0.0.0.0/0 | DENY |
+| 100 | Custom TCP | TCP | 0-65535 | `0.0.0.0/0` | ALLOW |
 
 ### 6.2 Private App Subnet NACL
 
-1. Create NACL: `private-app-nacl` → associate `private-app-1a`, `private-app-1b`
+**Create the NACL:**
+1. Go to **VPC → Network ACLs → Create network ACL**
+2. Name: `private-app-nacl`, VPC: `VanguardVPC` → **Create**
+3. Select `private-app-nacl` → **Actions → Edit subnet associations** → select `private-app-1a` and `private-app-1b` → Save
 
-**Inbound Rules:**
+**Inbound Rules** → Edit inbound rules → Add rule:
 
-| Rule # | Type | Port | Source | Allow/Deny |
-|---|---|---|---|---|
-| 100 | TCP | 80 | 10.0.1.0/24, 10.0.4.0/24 | ALLOW |
-| 110 | TCP | 443 | 10.0.1.0/24, 10.0.4.0/24 | ALLOW |
-| 120 | TCP | 1024-65535 | 0.0.0.0/0 | ALLOW |
-| * | All | All | 0.0.0.0/0 | DENY |
+> Each rule can only have **one CIDR** — enter them as separate rows:
 
-**Outbound Rules:**
+| Rule # | Type | Protocol | Port range | Source | Allow/Deny |
+|---|---|---|---|---|---|
+| 100 | Custom TCP | TCP | 80 | `10.0.1.0/24` | ALLOW |
+| 110 | Custom TCP | TCP | 80 | `10.0.4.0/24` | ALLOW |
+| 120 | Custom TCP | TCP | 443 | `10.0.1.0/24` | ALLOW |
+| 130 | Custom TCP | TCP | 443 | `10.0.4.0/24` | ALLOW |
+| 140 | Custom TCP | TCP | 1024-65535 | `0.0.0.0/0` | ALLOW |
 
-| Rule # | Type | Port | Dest | Allow/Deny |
-|---|---|---|---|---|
-| 100 | TCP | 0-65535 | 0.0.0.0/0 | ALLOW |
-| * | All | All | 0.0.0.0/0 | DENY |
+**Outbound Rules** → Edit outbound rules → Add rule:
+
+| Rule # | Type | Protocol | Port range | Destination | Allow/Deny |
+|---|---|---|---|---|---|
+| 100 | Custom TCP | TCP | 80 | `0.0.0.0/0` | ALLOW |
+| 110 | Custom TCP | TCP | 443 | `0.0.0.0/0` | ALLOW |
+| 120 | Custom TCP | TCP | 1024-65535 | `0.0.0.0/0` | ALLOW |
 
 ---
 
@@ -200,32 +271,92 @@ Go to **VPC → Security Groups → Create security group** (VPC: `VanguardVPC`)
 
 ## PHASE 8 — VPC Interface Endpoints (PrivateLink)
 
-> These allow private subnets to reach SSM and Secrets Manager **without internet**.
+> [!NOTE]
+> These 4 endpoints let your EC2 instances (in private subnets) talk to SSM and Secrets Manager **through the AWS backbone — no internet, no NAT needed**.
+> You will create **1 Security Group first**, then **4 endpoints**.
 
-### 8.1 SSM Endpoints (need 3)
+---
 
-Repeat **Create endpoint** for each:
+### Step 8.0 — Create `endpoint-sg` Security Group First
 
-| Name | Service |
+> [!IMPORTANT]
+> Do this **before** creating any endpoint. You'll need this SG when creating each endpoint.
+
+1. Go to **VPC → Security Groups → Create security group**
+
+| Field | Value |
 |---|---|
-| `ssm-endpoint` | `com.amazonaws.us-east-1.ssm` |
-| `ssmmessages-endpoint` | `com.amazonaws.us-east-1.ssmmessages` |
-| `ec2messages-endpoint` | `com.amazonaws.us-east-1.ec2messages` |
+| Security group name | `endpoint-sg` |
+| Description | `Allows HTTPS from VPC to interface endpoints` |
+| VPC | `VanguardVPC` |
 
-For each:
-- Type: **Interface**
-- VPC: `VanguardVPC`
-- Subnets: `private-app-1a`, `private-app-1b`
-- Security group: Create a new SG `endpoint-sg` with inbound HTTPS (443) from `10.0.0.0/16`
-- Enable DNS: ✅ Yes
+2. **Inbound Rules → Add rule:**
 
-### 8.2 Secrets Manager Endpoint
+| Type | Protocol | Port | Source |
+|---|---|---|---|
+| HTTPS | TCP | 443 | `10.0.0.0/16` *(the entire VPC CIDR)* |
 
-| Name | Service |
+3. Outbound: leave default → **Create security group**
+
+---
+
+### Step 8.1 — Create Endpoint 1 of 4: `ssm-endpoint`
+
+1. Go to **VPC → Endpoints → Create endpoint**
+2. Fill in fields:
+
+| Field | Value |
 |---|---|
-| `secretsmanager-endpoint` | `com.amazonaws.us-east-1.secretsmanager` |
+| Name | `ssm-endpoint` |
+| Service category | AWS services |
+| Service name | Search `com.amazonaws.us-east-1.ssm` → select it |
+| **Type shown** | Make sure it says **Interface** (not Gateway) |
+| VPC | `VanguardVPC` |
+| Subnets | Tick `us-east-1a` → `private-app-1a` AND `us-east-1b` → `private-app-1b` |
+| Security groups | Remove default → select `endpoint-sg` |
+| Enable DNS name | ✅ **Enable** |
 
-Same settings as SSM endpoints above.
+3. Click **Create endpoint**
+
+---
+
+### Step 8.2 — Create Endpoint 2 of 4: `ssmmessages-endpoint`
+
+Repeat exactly the same steps as 8.1 with ONE change:
+
+| Field | Value |
+|---|---|
+| Name | `ssmmessages-endpoint` |
+| Service name | `com.amazonaws.us-east-1.ssmmessages` |
+
+*(All other fields: same VPC, same subnets, same `endpoint-sg`, Enable DNS ✅)*
+
+---
+
+### Step 8.3 — Create Endpoint 3 of 4: `ec2messages-endpoint`
+
+| Field | Value |
+|---|---|
+| Name | `ec2messages-endpoint` |
+| Service name | `com.amazonaws.us-east-1.ec2messages` |
+
+*(All other fields: same VPC, same subnets, same `endpoint-sg`, Enable DNS ✅)*
+
+---
+
+### Step 8.4 — Create Endpoint 4 of 4: `secretsmanager-endpoint`
+
+| Field | Value |
+|---|---|
+| Name | `secretsmanager-endpoint` |
+| Service name | `com.amazonaws.us-east-1.secretsmanager` |
+
+*(All other fields: same VPC, same subnets, same `endpoint-sg`, Enable DNS ✅)*
+
+---
+
+> [!TIP]
+> After creating all 4, go to **VPC → Endpoints** and confirm all 4 show **Status: Available** before continuing to Phase 9.
 
 ---
 
@@ -304,13 +435,13 @@ Same settings as SSM endpoints above.
 set -e
 exec > >(tee /var/log/user-data.log | logger -t user-data) 2>&1
 
-echo "=== [1/6] System update ==="
+echo "=== [1/7] System update ==="
 dnf update -y
 
-echo "=== [2/6] Install Git and NGINX ==="
+echo "=== [2/7] Install Git and NGINX ==="
 dnf install -y git nginx
 
-echo "=== [3/6] Install Node.js 18 via nvm ==="
+echo "=== [3/7] Install Node.js 18 via nvm ==="
 export HOME=/root
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 export NVM_DIR="$HOME/.nvm"
@@ -319,17 +450,39 @@ nvm install 18
 nvm use 18
 nvm alias default 18
 
-# Make node/npm available system-wide
 ln -sf "$(which node)" /usr/local/bin/node
 ln -sf "$(which npm)" /usr/local/bin/npm
 
-echo "=== [4/6] Clone RouteSync from GitHub ==="
+echo "=== [4/7] Clone RouteSync from GitHub ==="
 mkdir -p /var/www
 cd /var/www
 git clone https://github.com/Pramodh92/RouteSync.git routesync
 cd routesync
 
-echo "=== [5/6] Install dependencies & build React app ==="
+# ──────────────────────────────────────────────────────────────────
+# [5/7] CREATE .env — PASTE YOUR REAL API KEYS HERE IN AWS CONSOLE
+# This script lives ONLY in AWS Launch Template (never in GitHub).
+# Replace every REPLACE_WITH_... value with your actual secrets.
+# ──────────────────────────────────────────────────────────────────
+echo "=== [5/7] Create server/.env ==="
+cat > /var/www/routesync/server/.env << 'ENVEOF'
+PORT=3001
+NODE_ENV=production
+JWT_SECRET=REPLACE_WITH_YOUR_JWT_SECRET
+JWT_EXPIRES_IN=7d
+FRONTEND_ORIGIN=http://localhost:5173
+GROQ_API_KEY=REPLACE_WITH_YOUR_GROQ_API_KEY
+OPENWEATHER_API_KEY=REPLACE_WITH_YOUR_OPENWEATHER_KEY
+AWS_REGION=us-east-1
+DYNAMO_USERS_TABLE=routesync-users
+DYNAMO_BOOKINGS_TABLE=routesync-bookings
+DYNAMO_ROUTES_TABLE=routesync-routes
+ENVEOF
+
+chmod 600 /var/www/routesync/server/.env
+echo ".env created successfully"
+
+echo "=== [6/7] Install dependencies & build React app ==="
 npm install --legacy-peer-deps
 npm run build
 
@@ -337,8 +490,16 @@ npm run build
 mkdir -p /var/www/routesync-dist
 cp -r dist/. /var/www/routesync-dist/ 2>/dev/null || cp -r build/. /var/www/routesync-dist/
 
-echo "=== [6/6] Configure and start NGINX ==="
-# Disable default NGINX site
+# Install server dependencies
+cd /var/www/routesync/server
+npm install
+cd /var/www/routesync
+
+# Start the backend server with Node (background process)
+nohup node /var/www/routesync/server/server.js >> /var/log/routesync-server.log 2>&1 &
+echo "Backend server started on port 3001"
+
+echo "=== [7/7] Configure and start NGINX ==="
 rm -f /etc/nginx/conf.d/default.conf
 
 cat > /etc/nginx/conf.d/routesync.conf << 'NGINXCONF'
@@ -347,6 +508,15 @@ server {
     server_name _;
     root /var/www/routesync-dist;
     index index.html;
+
+    # Proxy API calls to Express backend
+    location /api/ {
+        proxy_pass http://localhost:3001;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
 
     # React Router support — all paths serve index.html
     location / {
